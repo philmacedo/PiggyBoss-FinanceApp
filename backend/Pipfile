@@ -12,6 +12,9 @@ seaborn = "*"
 django-debug-toolbar = "*"
 django-filter = "*"
 mysqlclient = "*"
+psycopg2 = "*"
+python-dotenv = "*"
+dj-database-url = "*"
 
 [dev-packages]
 
