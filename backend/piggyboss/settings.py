@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'piggyboss.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=f'postgresql://postgres.qxqenfwtdkrenyrzvrzo:{os.getenv('PASSWORD')}@aws-0-sa-east-1.pooler.supabase.com:5432/postgres'
+        default=f'postgresql://{os.getenv('USER')}:{os.getenv('PASSWORD')}@aws-0-sa-east-1.pooler.supabase.com:{os.getenv('PORT')}/postgres'
     )
 }
 
