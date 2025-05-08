@@ -80,11 +80,11 @@ WSGI_APPLICATION = 'piggyboss.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=f'postgresql://{os.getenv('USER')}:{os.getenv('PASSWORD')}@aws-0-sa-east-1.pooler.supabase.com:{os.getenv('PORT')}/postgres'
+        default=f'postgresql://{os.getenv("USERNAME_DB")}:{os.getenv("PASSWORD_DB")}@aws-0-sa-east-1.pooler.supabase.com:{os.getenv("PORT_DB")}/postgres'
     )
 }
 
-
+    
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 

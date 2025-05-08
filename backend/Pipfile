@@ -14,6 +14,7 @@ django-filter = "*"
 psycopg2 = "*"
 python-dotenv = "*"
 dj-database-url = "*"
+factory-boy = "*"
 
 [dev-packages]
 

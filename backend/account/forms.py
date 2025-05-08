@@ -1,6 +1,8 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 import random
 import string
 
@@ -24,18 +26,21 @@ class RegisterForm(UserCreationForm):
             base_username = f"{base_username}-{suffix}"
 
         return base_username
-
+    
     def clean_username(self):
-        first_name = self.cleaned_data.get('first_name')
-        last_name = self.cleaned_data.get('last_name')
-
-        username = self.generate_unique_username(first_name, last_name)
-
-        return username
+        email = self.cleaned_data.get('email')
+        return email
     
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        # Checa se o email já está em uso
+        
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError("Este e-mail já está em uso.")
         return email
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.username = user.email
+        if commit:
+            user.save()
+        return user
