@@ -17,6 +17,7 @@ dj-database-url = "*"
 factory-boy = "*"
 django-phonenumber-field = "*"
 django-colorfield = "*"
+django-phonenumbers = "*"
 
 [dev-packages]
 

@@ -19,3 +19,6 @@ class Profile(models.Model):
             ],
         default='pt-BR'
     )
+
+    def __str__(self):
+        return self.full_name or f"{self.user.first_name} + {self.user.last_name}" 
