@@ -46,8 +46,6 @@ class BankAccount(models.Model):
         verbose_name = "Bank Account"
         verbose_name_plural = "Bank Accounts"
 
-    
-
 class Card(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='cards')
     name = models.CharField(max_length=30)
@@ -78,9 +76,8 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
-
     
-class third(models.Model):
+class Third(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='thirds')
     name = models.CharField(max_length=30)
     related = models.CharField(max_length=30)
@@ -112,7 +109,7 @@ class Transactions(models.Model):
         ])
     card = models.ForeignKey(Card, on_delete=models.SET_NULL, null=True, blank=True)
     bank = models.ForeignKey(BankAccount, on_delete=models.SET_NULL, null=True, blank=True)
-    third = models.ForeignKey(third, on_delete=models.SET_NULL, null=True, blank=True)
+    third = models.ForeignKey(Third, on_delete=models.SET_NULL, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -133,7 +130,8 @@ class CreditCardBill(models.Model):
         ('paid', 'Paid'),
         ('unpaid', 'Unpaid'),
         ('overdue', 'Overdue')
-        ]
+        ],
+        default='unpaid'
     )
 
     class Meta:

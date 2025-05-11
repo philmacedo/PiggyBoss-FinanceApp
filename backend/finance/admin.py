@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (
     Institution, BankAccount, Card,
-    Category, third, Transactions, CreditCardBill
+    Category, Third, Transactions, CreditCardBill
 )
 
 @admin.register(Institution)
@@ -31,7 +31,7 @@ class CategoryAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
-@admin.register(third)
+@admin.register(Third)
 class ThirdAdmin(admin.ModelAdmin):
     list_display = ('name', 'related', 'age', 'profile')
     search_fields = ('name', 'related')
