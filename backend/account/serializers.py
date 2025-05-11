@@ -5,16 +5,16 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError as DjangoValidationError
-from phonenumber_field.modelfields import PhoneNumberField
+from phonenumber_field.serializerfields import PhoneNumberField
 from account.models import Profile
 import re
 
 class RegisterSerializer(serializers.ModelSerializer):
-    first_name = serializers.CharField(write_only=True)
-    last_name = serializers.CharField(write_only=True)
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
     email = serializers.EmailField()
-    date_of_birth = serializers.DateField(write_only=True)
-    phone_number = PhoneNumberField(region="BR")
+    date_of_birth = serializers.DateField(required=False, allow_null=True)
+    phone_number = PhoneNumberField(region="BR", required=False, allow_null=True)
     password = serializers.CharField(write_only=True)
 
     class Meta:
@@ -22,11 +22,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = ['first_name', 'last_name', 'email', 'date_of_birth', 'phone_number', 'password']
 
     def validate_email(self, value):
-        try:
-            validate_email(value)
-        except DjangoValidationError:
-            raise serializers.ValidationError("Invalid email format.")
-        
         if User.objects.filter(email=value).exists():
                 raise serializers.ValidationError("This email is already in use.")
         
@@ -50,11 +45,16 @@ class RegisterSerializer(serializers.ModelSerializer):
         last_name = validated_data.pop('last_name')
         full_name = f'{first_name} {last_name}'
         password = validated_data.pop('password')
-        phone_number = validated_data.pop('phone_number')
-        date_of_birth = validated_data.pop('date_of_birth')
+        phone_number = validated_data.pop('phone_number', None)
+        date_of_birth = validated_data.pop('date_of_birth', None)
 
         validated_data['username'] = validated_data['email']
-        user = User.objects.create(**validated_data)
+        user = User.objects.create(
+            username = validated_data['username'],
+            email = validated_data['email'],
+            first_name=first_name,
+            last_name=last_name
+        )
         user.set_password(password)
         user.save()
 
