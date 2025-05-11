@@ -28,7 +28,7 @@ class Institution(models.Model):
         verbose_name_plural = "Institutions"
 
 class BankAccount(models.Model):
-    profile_id = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="bank_accounts")
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="bank_accounts")
     institution = models.ForeignKey(Institution, on_delete=models.SET_NULL, null=True, blank=True, related_name="bank_accounts")
     account_type = models.CharField(max_length=20, 
         choices=[
