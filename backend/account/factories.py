@@ -14,7 +14,7 @@ class UserFactory(factory.django.DjangoModelFactory):
     last_name = factory.Faker('last_name')
     email = factory.LazyAttribute(
         lambda o: f"{o.first_name.lower()}_{o.last_name.lower()}_{''.join(random.choices(string.ascii_lowercase + string.digits, k=3))}@example.com")
-    password = factory.PostGenerationMethodCall('set_password', 'strongPassword123')
+    password = factory.PostGenerationMethodCall('set_password', 'strong@Password123')
 
     @factory.lazy_attribute
     def username(self):

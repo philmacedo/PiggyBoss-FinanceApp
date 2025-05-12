@@ -15,6 +15,10 @@ psycopg2 = "*"
 python-dotenv = "*"
 dj-database-url = "*"
 factory-boy = "*"
+django-phonenumber-field = "*"
+django-colorfield = "*"
+django-phonenumbers = "*"
+djangorestframework-simplejwt = "*"
 
 [dev-packages]
 

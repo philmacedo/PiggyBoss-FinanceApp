@@ -1,17 +1,19 @@
-from django.contrib import messages
-from django.shortcuts import redirect
-from django.views.generic import CreateView
-from .forms import RegisterForm
+from rest_framework import generics, status
+from rest_framework.views import APIView
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from .serializers import RegisterSerializer, LoginSerializer
+from django.contrib.auth.models import User
 
-class register_view(CreateView):
-    template_name = "account/register.html"
-    form_class = RegisterForm
+class RegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = RegisterSerializer
+    permission_classes = [AllowAny]
 
-    def form_valid(self, form):
-        form.save()
-        messages.success(self.request, 'Conta criada com sucesso! Você pode fazer login agora.')
-        return redirect('login')
+class LoginView(APIView):
+    permission_classes = [AllowAny]
 
-    def form_invalid(self, form):
-        messages.error(self.request, "Erro ao registrar. Verifique os dados e tente novamente.")
-        return super().form_invalid(form)
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)

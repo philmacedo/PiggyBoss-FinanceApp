@@ -1,115 +1,92 @@
-from django.test import TestCase
-from django.urls import reverse
+from rest_framework.test import APITestCase
+from rest_framework import status
+from django.contrib.auth import get_user_model
 from .factories import UserFactory
-from django.contrib.sessions.models import Session
-from django.contrib.auth import get_user_model, logout
-from django.db import connection
 
-class AccountTest(TestCase):
+User = get_user_model()
+
+class AccountAPITest(APITestCase):
     
     def setUp(self):
-        Session.objects.all().delete() 
         self.user = UserFactory.create()
 
-    def test_register_form_valid(self):
-
+    def test_register_valid_data(self):
         data = {
-            'username': 'teste1',
-            'first_name': "im",
-            'last_name': "testing",
-            'email': "test_email@email.com",
-            'password1' : "randompassowrd123",
-            'password2' : "randompassowrd123"
+            "first_name": "John",
+            "last_name": "Doe",
+            "email": "john.doe@example.com",
+            "password": "StrongPass123!",
+            "date_of_birth": "2000-01-01",
+            "phone_number": "+5521999991234"
         }
+        response = self.client.post("/account/register/", data, format="json")
 
-        response = self.client.post(reverse('register'), data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(User.objects.filter(email="john.doe@example.com").exists())
 
-        self.assertEqual(response.status_code, 302)
-        User = get_user_model()
-        self.assertTrue(User.objects.filter(email=self.user.email).exists())
-
-    def test_register_form_invalid_password_mismatch(self):
-
+    def test_register_valid_data_and_null_fields(self):
         data = {
-            'username': 'teste2',
-            'first_name': "im",
-            'last_name': "testing_2",
-            'email': "test_email_2@email.com",
-            'password1' : "randompassowrd123",
-            'password2' : "randompassowrd12345"
+            "first_name": "John",
+            "last_name": "Doe",
+            "email": "john.doe@example.com",
+            "password": "StrongPass123!",
+            "date_of_birth": None,
+            "phone_number": None
         }
+        response = self.client.post("/account/register/", data, format="json")
 
-        response = self.client.post(reverse('register'), data)
-        form = response.context.get('form')
-        self.assertFalse(form.is_valid())
-        self.assertIn('Os dois campos de senha não correspondem.', form.errors['password2'])
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(User.objects.filter(email="john.doe@example.com").exists())
 
-
-    def test_register_form_invalid_email(self):
-
+    def test_register_week_password(self):
         data = {
-            'username': 'teste3',
-            'first_name': "im",
-            'last_name': "testing_2",
-            'email': "email",
-            'password1' : "randompassowrd123",
-            'password2' : "randompassowrd123"
+            "first_name": "Jane",
+            "last_name": "Doe",
+            "email": "jane.doe@example.com",
+            "password": "senha12345678"
         }
-
-        response = self.client.post(reverse('register'), data)
-
-        form = response.context.get('form')
-        self.assertFalse(form.is_valid())
-        self.assertIn('Informe um endereço de email válido.', form.errors['email'])
-
-    def test_register_form_invalid_used_email(self):
-
-        data = {
-            'username' : self.user.email,
-            'first_name': self.user.first_name,
-            'last_name': self.user.last_name,
-            'email': self.user.email,
-            'password1' : "randompassowrd123",
-            'password2' : "randompassowrd123"
-        }
-
-        response = self.client.post(reverse('register'), data)
         
-        form = response.context.get('form')
-        self.assertFalse(form.is_valid())
-        self.assertIn('Este e-mail já está em uso.', form.errors['email'])
+        response = self.client.post("/account/register/", data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("password", response.data)
 
-    def test_login_form_with_correct_credentials(self):
+    def test_register_invalid_email_format(self):
         data = {
-            'username' : self.user.email,
-            'password' : 'strongPassword123',
+            "first_name": "Bad",
+            "last_name": "Email",
+            "email": "not-an-email",
+            "password": "StrongPass123!"
         }
+        response = self.client.post("/account/register/", data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("email", response.data)
 
-        response = self.client.post(reverse('login'), data, follow=True)
-        form = response.context.get('form')
-
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue(response.context['user'].is_authenticated)
-
-        logout(self.client)
-
-    def test_login_form_with_incorrect_credentials(self):
+    def test_register_email_already_used(self):
         data = {
-            'username': 'johndoe',
-            'password': 'wrongpassword'
+            "first_name": "Existing",
+            "last_name": "User",
+            "email": self.user.email,
+            "password": "AnotherPass123!"
         }
+        response = self.client.post("/account/register/", data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("email", response.data)
 
-        response = self.client.post(reverse('login'), data)
+    def test_login_with_correct_credentials(self):
+        data = {
+            "email": self.user.email,
+            "password": "strong@Password123"
+        }
+        response = self.client.post("/account/login/", data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn("access", response.data)
+        self.assertIn("refresh", response.data)
 
-        self.assertFalse(response.context['user'].is_authenticated)
-
-        form = response.context.get('form')
-        
-        self.assertIsNotNone(form)
-        self.assertFalse(form.is_valid())
-        self.assertIn('__all__', form.errors)
-
-    @classmethod
-    def tearDownClass(cls):
-        connection.close()
-        super().tearDownClass()
+    def test_login_with_wrong_credentials(self):
+        data = {
+            "email": self.user.email,
+            "password": "wrongpassword"
+        }
+        response = self.client.post("/account/login/", data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertIn("detail", response.data)
