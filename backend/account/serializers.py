@@ -7,7 +7,7 @@ from django.core.validators import validate_email
 from django.core.exceptions import ValidationError as DjangoValidationError
 from phonenumber_field.serializerfields import PhoneNumberField
 from account.models import Profile
-import re
+
 
 class RegisterSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField()
@@ -84,10 +84,10 @@ class LoginSerializer(serializers.Serializer):
         return value
 
     def validate(self, validation_data):
-        username = validation_data.get('email')
+        email = validation_data.get('email')
         password = validation_data.get('password')
 
-        user = authenticate(username=username, password=password)
+        user = authenticate(username=email, password=password)
         if not user:
             raise AuthenticationFailed('Invalid credentials.')
 

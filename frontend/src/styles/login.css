@@ -16,6 +16,20 @@ body {
   padding: 2rem;
 }
 
+
+.logo {
+  width: auto;
+  height: auto;
+  transform: scale(2);
+  transform-origin: center;
+  display: block;
+  margin: 0 auto 2px auto;
+}
+
+
+
+
+
 .container {
   display: flex;
   gap: 4rem;
@@ -26,15 +40,16 @@ body {
 .login-box {
   background: #2C2C3D;
   border-radius: 1rem;
-  padding: 2rem;
+  padding: 1.5rem;
   width: 100%;
-  max-width: 400px;
+  max-width: 500px; /* aumenta a caixa para comportar a imagem maior */
   text-align: center;
   box-shadow: 0 0 20px rgba(255, 102, 196, 0.4);
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+
 
 .login-box h1 {
   color: #FF66C4;
@@ -99,7 +114,18 @@ form {
 }
 
 .error-message {
-  background: #FF66C4;
+  background: #fa0303;
+  color: white;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-top: 1.5rem;
+  width: 100%;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.success-message {
+  background-color: #4caf50; /* Verde */
   color: white;
   padding: 1rem;
   border-radius: 0.5rem;

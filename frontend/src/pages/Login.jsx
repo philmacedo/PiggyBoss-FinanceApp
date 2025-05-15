@@ -1,13 +1,18 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import "../styles/login.css";
+import API from "../api";
+import logo from "../assets/logo.png";
+
+
 
 function Login() {
   const [formData, setFormData] = useState({
-    username: '',
+    email: '',
     password: '',
   });
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleChange = (e) => {
     setFormData({
@@ -16,32 +21,37 @@ function Login() {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (formData.username.trim() === '' || formData.password.trim() === '') {
-      setError('Usuário ou senha inválidos.');
-    } else {
-      setError('');
-      console.log("Login realizado:", formData);
-      // Aqui você poderá redirecionar ou autenticar de verdade futuramente
-    }
+  const handleSubmit = async (e) => {
+      e.preventDefault();
+      try {
+        const response = await API.post('/login/', formData); //envia email e password
+        console.log('Login bem-sucedido:', response.data);
+        localStorage.setItem('token', response.data.access); // salvar o token se precisar
+        setSuccessMessage("Login bem-sucedido!");
+        setError("") // limpa mensagem de erro, caso tenha
+      // redirecionar o usuário
+      } catch (err) {
+        console.error(err);
+        setError('Usuário ou senha inválidos.');
+        setSuccessMessage('');
+      }
   };
 
   return (
     <div className="container">
       <div className="login-box">
+        <img src={logo} alt="Logo" className="logo" />
         <h1>Piggy Boss</h1>
         <form onSubmit={handleSubmit}>
           <div className="input-group">
-            <label htmlFor="username">Usuário</label>
+            <label htmlFor="email">Usuário</label>
             <input
-              type="text"
-              id="username"
-              name="username"
-              value={formData.username}
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
               onChange={handleChange}
-              placeholder="Digite seu usuário"
+              placeholder="Digite seu email"
               required
             />
           </div>
@@ -64,11 +74,16 @@ function Login() {
           <p>Não possui uma conta? <Link to="/register">Registre-se</Link></p>
         </div>
 
-        {error && (
+        {successMessage ? (
+          <div className="success-message">
+            <p>{successMessage}</p>
+          </div>
+      ) : error && (
           <div className="error-message">
             <p>{error}</p>
           </div>
-        )}
+      )}
+
       </div>
     </div>
   );

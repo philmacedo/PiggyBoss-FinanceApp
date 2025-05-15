@@ -1,12 +1,17 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import "../styles/register.css"; // Estilização específica do registro
+import API from "../api";
+import logo from "../assets/logo.png";
+
 
 function Register() {
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
     email: '',
+    phone_number: '',
+    date_of_birth: '',
     password1: '',
     password2: '',
   });
@@ -20,30 +25,40 @@ function Register() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Simulando uma verificação simples
-    if (!formData.first_name || !formData.last_name || !formData.email || !formData.password1 || !formData.password2) {
-      setError('Por favor, preencha todos os campos.');
-      return;
-    }
     if (formData.password1 !== formData.password2) {
       setError('As senhas não coincidem.');
       return;
     }
-
-    // Depois aqui faria uma requisição real para o backend
-    console.log("Dados cadastrados:", formData);
-
-    // Simular sucesso
-    setError('');
-    setMessages(["Registro realizado com sucesso!"]);
+    try {
+      const dataToSend = { 
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        email: formData.email,
+        password: formData.password1,
+        phone_number: formData.phone_number || null,
+        date_of_birth: formData.date_of_birth || null
+      };
+      const response = await API.post('/register/', dataToSend);
+      console.log('Cadastro feito com sucesso:', response.data);
+      setMessages(['Cadastro realizado com sucesso!']);
+      setError('');
+      // talvez redirecionar para login
+    } catch (err) {
+      console.error(err.response);
+      if (err.response?.data){
+        setError(Object.values(err.response.data).flat().join(' '));
+      } else {
+        setError('Erro no registro.');
+      }
+    }
   };
 
-  return (
+    return (
     <div className="container">
       <div className="register-box">
+        <img src={logo} alt="Logo" className="logo" />
         <h1>Cadastre-se</h1>
         <form onSubmit={handleSubmit}>
           <div className="input-group">
@@ -77,6 +92,27 @@ function Register() {
               value={formData.email}
               onChange={handleChange}
               placeholder="Digite seu e-mail"
+            />
+          </div>
+          <div className="input-group">
+            <label htmlFor="phone_number">Telefone (opcional)</label>
+            <input
+              type="tel"
+              id="phone_number"
+              name="phone_number"
+              value={formData.phone_number}
+              onChange={handleChange}
+              placeholder="Digite seu telefone"
+            />
+          </div>
+          <div className="input-group">
+            <label htmlFor="date_of_birth">Data de nascimento (opcional)</label>
+            <input
+              type="date"
+              id="date_of_birth"
+              name="date_of_birth"
+              value={formData.date_of_birth}
+              onChange={handleChange}
             />
           </div>
           <div className="input-group">
