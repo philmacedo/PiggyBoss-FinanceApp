@@ -1,0 +1,25 @@
+.form-field {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.form-field label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #ccc;
+  font-size: 0.9rem;
+}
+
+.form-field input {
+  width: 100%;
+  padding: 0.7rem;
+  border-radius: 0.5rem;
+  border: none;
+  background: #444;
+  color: white;
+  font-size: 1rem;
+}
+
+.form-field input::placeholder {
+  color: #aaa;
+}

@@ -19,6 +19,7 @@ django-phonenumber-field = "*"
 django-colorfield = "*"
 django-phonenumbers = "*"
 djangorestframework-simplejwt = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 

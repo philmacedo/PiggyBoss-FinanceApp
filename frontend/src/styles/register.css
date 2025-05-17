@@ -1,0 +1,59 @@
+/* register.css */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #1E1E2F, #9B59B6);
+  color: white;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.container {
+  display: flex;
+  gap: 4rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.register-box {
+  background: #2C2C3D;
+  border-radius: 1rem;
+  padding: 2rem;
+  width: 400px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(255, 102, 196, 0.4);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.register-box h1 {
+  color: #FF66C4;
+  margin-bottom: 1rem;
+}
+
+.register {
+  margin: 2rem 1rem 1rem 1rem;
+}
+
+.register a {
+  text-decoration: underline;
+  color: inherit;
+}
+
+.card {
+  background: #FF66C4;
+  color: white;
+  padding: 1rem;
+  border-radius: 1rem;
+  margin-top: 1rem;
+}
