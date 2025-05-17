@@ -1,9 +1,8 @@
 import axios from 'axios';
 
-const API = axios.create({
-  baseURL: 'http://localhost:8000/account', // ajuste se mudar
-});
-
-// Enviar token JWT depois (ex: API.defaults.headers.common['Authorization'] = `Bearer ${token}`);
+const API = {
+  account: axios.create({baseURL: 'http://localhost:8000/account'}),
+  finance: axios.create({baseURL: 'http://localhost:8000/finance'}),
+} 
 
 export default API;

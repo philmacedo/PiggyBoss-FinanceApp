@@ -7,6 +7,7 @@ from django.core.validators import validate_email
 from django.core.exceptions import ValidationError as DjangoValidationError
 from phonenumber_field.serializerfields import PhoneNumberField
 from account.models import Profile
+import re
 
 
 class RegisterSerializer(serializers.ModelSerializer):
