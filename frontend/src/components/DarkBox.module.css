@@ -1,0 +1,12 @@
+.dark-box {
+  background: #2C2C3D;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(255, 102, 196, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
