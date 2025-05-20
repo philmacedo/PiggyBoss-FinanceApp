@@ -1,0 +1,94 @@
+.app-footer {
+    background-color: #2c3e50; /* Fundo principal do footer */
+    color: #bdc3c7;            /* Cor do texto */
+    padding: 60px 0 0 0;
+    font-size: 0.95em;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px 40px 20px; /* Padding inferior */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Layout responsivo em grade */
+    gap: 30px;
+}
+
+.footer-section h4 {
+    color: #ffffff; /* Títulos em branco */
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.footer-section p {
+    line-height: 1.7;
+    margin-bottom: 10px;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-section ul li {
+    margin-bottom: 10px;
+}
+
+.footer-section ul li a {
+    color: #bdc3c7;
+    text-decoration: none;
+    transition: color 0.3s ease, padding-left 0.3s ease;
+}
+
+.footer-section ul li a:hover {
+    color: #ffffff;
+    padding-left: 5px; /* Efeito sutil de deslocamento */
+}
+
+.social-icons a {
+    color: #bdc3c7;
+    font-size: 1.5em; /* Tamanho dos ícones */
+    margin-right: 15px;
+    transition: color 0.3s ease, transform 0.3s ease;
+    display: inline-block;
+}
+
+.social-icons a:hover {
+    color: #ffffff;
+    transform: scale(1.1);
+}
+
+.social-icons a:last-child {
+    margin-right: 0;
+}
+
+/* Placeholder para ícones se não estiver usando uma biblioteca */
+.social-icon-placeholder {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    border: 1px solid #bdc3c7;
+    border-radius: 50%;
+    font-size: 0.8em;
+}
+
+.social-icon-placeholder:hover {
+    border-color: #ffffff;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding: 20px 0;
+    border-top: 1px solid #3a506b; /* Linha separadora */
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.footer-bottom p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #95a5a6;
+}
