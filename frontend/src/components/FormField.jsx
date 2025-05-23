@@ -1,7 +1,11 @@
 import styles from './FormField.module.css';
 
-export default function FormField({ name, label, type, value, onChange, placeholder, required = false }){
-    return <div className={styles['form-field']}>
+export default function FormField({ name, label, type, value, onChange, placeholder, required = false,  width}){
+    const style = {
+        width: width || 'auto',
+    };
+    
+    return <div className={styles['form-field']} style={style}>
         <label htmlFor={label}>{label}</label>
         <input
             type={type}

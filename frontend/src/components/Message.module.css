@@ -1,6 +1,5 @@
 .error-message {
   color: #c0392b;
-  padding: 1rem;
   border-radius: 0.5rem;
   width: 100%;
   text-align: center;
@@ -9,7 +8,6 @@
 
 .success-message {
   color: #2ecc71;
-  padding: 1rem;
   border-radius: 0.5rem;
   width: 100%;
   text-align: center;
