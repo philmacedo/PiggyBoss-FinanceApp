@@ -1,5 +1,5 @@
 nav {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: space-between;
     height: 5%;
@@ -9,10 +9,22 @@ nav {
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    width: 50%;
+    height: 100%;
+}
+
+.left-side p {
+    margin: 0% 2%
 }
 
 .right-side {
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    width: 50%;
+    height: 100%;
+}
+
+.right-side p {
+    margin: 0% 2%
 }

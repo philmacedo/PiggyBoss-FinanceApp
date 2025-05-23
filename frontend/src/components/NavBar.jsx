@@ -6,7 +6,7 @@ export default function NavBar(){
     const NAVBAR = (
         <nav>
             <div className={styles['left-side']}>
-                <p>dashboard</p>
+                <p>Dashboard</p>
                 <p>Cards and Banks</p>
             </div>
             <div className={styles['right-side']}>
