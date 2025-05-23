@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Account.module.css"
 import API from "../../api";
@@ -9,10 +9,13 @@ import DarkBox from "../../components/DarkBox";
 import Message from "../../components/Message"; 
 
 export default function Login() {
+  useEffect(() => {
+    document.title = "Login";
+  }, []);
+
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: '', password: '',});
   const [error, setError] = useState('');
-
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -38,41 +41,50 @@ export default function Login() {
   };
 
   const LOGIN_PAGE = (
-      <DarkBox>
-        <img src={logo} alt="Logo" className={styles['logo']} />
-        <form onSubmit={handleSubmit} style={{ width: '100%'}}>
+    <div className={styles['account-page']}>
+        <DarkBox width="20%" height="55%"  minwidth="280px" minheight="500px">
 
-          <FormField
-            key="email"
-            name="email"
-            label="E-mail"
-            type="email" 
-            value={formData.email}
-            onChange=  {handleChange} 
-            placeholder="Enter your e-mail" 
-            required={true} 
-          />
+          <div style={{ height: '25%', margin: '5% 0 0 0' }}> 
+            <img src={logo} alt="Logo" className={styles['logo']} />
+          </div>
 
-          <FormField
-            key="password"
-            name="password"
-            label="Password"
-            type="password" 
-            value={formData.password}
-            onChange=  {handleChange} 
-            placeholder="Enter your password" 
-            required={true} 
-          />
+          <form onSubmit={handleSubmit} style={{ width: '100%', height: '55%'}}>
+            <div className={styles['form-container']}>
+              <FormField
+                key="email"
+                name="email"
+                label="E-mail"
+                type="email" 
+                value={formData.email}
+                onChange=  {handleChange} 
+                placeholder="Enter your e-mail" 
+                required={true}
+                width="80%"
+              />
 
-          <PinkButton text="Sign in" />
-        </form>
+              <FormField
+                key="password"
+                name="password"
+                label="Password"
+                type="password" 
+                value={formData.password}
+                onChange=  {handleChange} 
+                placeholder="Enter your password" 
+                required={true} 
+                width="80%"
+              />
 
-        <div className={styles["p-link"]}>
-          <p>Don't have an account? <Link to="/register">Sign up</Link></p>
-        </div>
+              <PinkButton text="Sign in" width="35%" height="15%" />
+              </div>
+          </form>
 
-        { error && (<Message message={error} type="error" />) }
-      </DarkBox>
+          <div style={{ padding: "0.5rem 0 0 0", height: "10%" }}>
+            <p>Don't have an account? <Link to="/register" style={{ textDecoration: 'underline', color: 'inherit' }} >Sign up</Link></p>
+          </div>
+
+          <Message message={error} type="error" style={{ height: '5%' }} />
+        </DarkBox>
+    </div>
   );
 
   return LOGIN_PAGE

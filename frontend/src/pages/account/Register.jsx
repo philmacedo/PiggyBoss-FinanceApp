@@ -59,41 +59,47 @@ export default function Register() {
   };
 
   const FIELDS = [
-    { label: 'First Name', name: 'first_name', type: 'text', placeholder: 'Enter your first name', required: true },
-    { label: 'Last Name', name: 'last_name', type: 'text', placeholder: 'Enter your last name', required: true },
-    { label: 'Email', name: 'email', type: 'email', placeholder: 'Enter your email', required: true },
-    { label: 'Phone (optional)', name: 'phone_number', type: 'tel', placeholder: 'Enter your phone number' },
-    { label: 'Date of Birth (optional)', name: 'date_of_birth', type: 'date' },
-    { label: 'Password', name: 'password1', type: 'password', placeholder: 'Enter your password', required: true },
-    { label: 'Confirm Password', name: 'password2', type: 'password', placeholder: 'Confirm your password', required: true },
+    { label: 'First Name', name: 'first_name', type: 'text', placeholder: 'Enter your first name', required: true, width: '80%'},
+    { label: 'Last Name', name: 'last_name', type: 'text', placeholder: 'Enter your last name', required: true, width: '80%'},
+    { label: 'Email', name: 'email', type: 'email', placeholder: 'Enter your email', required: true, width: '80%'},
+    { label: 'Password', name: 'password1', type: 'password', placeholder: 'Enter your password', required: true, width: '80%'},
+    { label: 'Confirm Password', name: 'password2', type: 'password', placeholder: 'Confirm your password', required: true, width: '80%'},
   ];
 
   const REGISTER_PAGE = (
-    <DarkBox>
-      <img src={logo} alt="Logo" className={styles['logo']} />
-      <form onSubmit={handleSubmit}>
-        {FIELDS.map((field) => (
-          <FormField
-            key={field.name}
-            name={field.name}
-            label={field.label}
-            type={field.type} 
-            value={formData[field.name]}
-            onChange={handleChange} 
-            placeholder={field.placeholder}
-            required={field.required} 
-          />
-        ))}
-        <PinkButton text="Sign up"/>
-      </form>
+    <div className={styles['account-page']}>
+        <DarkBox width="20%" height="80%"  minwidth="280px" minheight="700px">
 
-      <div className={styles["p-link"]}>
-        <p>Already have an account? <Link to="/">Sign in</Link></p>
+          <div style={{ height: '15%', margin: '5% 0 0 0' }}>
+            <img src={logo} alt="Logo" className={styles['logo']} />
+          </div>
+
+          <form onSubmit={handleSubmit} style={{ width: '100%', height: '70%'}}>
+            <div className={styles['form-container']}>
+            {FIELDS.map((field) => (
+              <FormField
+                key={field.name}
+                name={field.name}
+                label={field.label}
+                type={field.type} 
+                value={formData[field.name]}
+                onChange={handleChange} 
+                placeholder={field.placeholder}
+                required={field.required}
+                width={field.width}
+              />
+            ))}
+            <PinkButton text="Sign up" width="35%" height="9%" margin="3% 0 0 0"/>
+            </div>
+          </form>
+
+          <div style={{ padding: "5% 0 0 0", height: "8%" }}>
+            <p>Already have an account? <Link to="/" style={{ textDecoration: 'underline', color: 'inherit' }} >Sign in</Link></p>
+          </div>
+
+          <Message message={error} type="error" style={{ height: '5%' }} />
+        </DarkBox>
       </div>
-
-      {error && (<Message message={error} type="error" />)}
-
-    </DarkBox>
   )
 
   return REGISTER_PAGE
