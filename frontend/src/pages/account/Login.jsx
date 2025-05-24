@@ -84,6 +84,20 @@ export default function Login() {
                 width="80%"
               />
 
+              <div style={{ width: "80%", textAlign: "center", marginBottom: "1rem" }}>
+                <Link
+                  to="/forgot-password"
+                  style={{
+                    textDecoration: "underline",
+                    color: "inherit",
+                    fontSize: "0.95rem",
+                    cursor: "pointer"
+                  }}
+                >
+                  Forgot password?
+                </Link>
+              </div>
+
               <PinkButton text="Sign in" width="35%" height="15%" />
               </div>
           </form>
