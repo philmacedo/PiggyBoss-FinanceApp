@@ -47,7 +47,7 @@ export default function Register() {
       };
       const response = await API["account"].post('/register/', dataToSend);
       setError('');
-      navigate('/');
+      navigate('/', { state: { successMessage: 'Cadastro realizado com sucesso!' } });;
       
     } catch (err) {
       if (err.response?.data){

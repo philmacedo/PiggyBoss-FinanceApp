@@ -8,14 +8,24 @@ import PinkButton from "../../components/PinkButton";
 import DarkBox from "../../components/DarkBox";
 import Message from "../../components/Message"; 
 
+import { useLocation } from "react-router-dom";
+
+
 export default function Login() {
   useEffect(() => {
     document.title = "Login";
   }, []);
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const registrationMessage = location.state?.successMessage || '';
+  
   const [formData, setFormData] = useState({ email: '', password: '',});
   const [error, setError] = useState('');
+
+  const [successMessage, setSuccessMessage] = useState(registrationMessage);
+  
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
