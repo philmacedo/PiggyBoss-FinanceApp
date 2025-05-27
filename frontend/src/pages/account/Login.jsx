@@ -10,7 +10,12 @@ import Message from "../../components/Message";
 
 export default function Login() {
   useEffect(() => {
-    document.title = "Login";
+    document.title = "Login"
+    document.body.style.background = 'linear-gradient(135deg, #1E1E2F, #9B59B6)';
+    return () => {
+      document.title = ''
+      document.body.style.background = '';
+    };
   }, []);
 
   const navigate = useNavigate();
@@ -42,7 +47,7 @@ export default function Login() {
 
   const LOGIN_PAGE = (
     <div className={styles['account-page']}>
-        <DarkBox width="20%" height="55%"  minwidth="280px" minheight="500px">
+        <DarkBox width="20%" height="55%"  minwidth="280px" minheight="500px" background="#2C2C3D">
 
           <div style={{ height: '25%', margin: '5% 0 0 0' }}> 
             <img src={logo} alt="Logo" className={styles['logo']} />
