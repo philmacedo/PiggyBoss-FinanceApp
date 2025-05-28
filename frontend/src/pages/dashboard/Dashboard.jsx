@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import styles from "./Dashboard.module.css";
 import DarkBox from "../../components/DarkBox";
 import PinkButton from "../../components/PinkButton";
@@ -21,7 +22,7 @@ export default function Dashboard(){
 
             <div className={styles["dashboard-item"]}>
 
-                <DarkBox width="95%" height="90%" minwidth="600px" background="#0f0b1f">
+                <DarkBox style = {{width : "95%", height : "90%", minwidth : "600px", background : "#0f0b1f"}}>
 
                     <div className={styles["dashboard-head"]}>
                         <h4 style={{ padding: "0 5% 0 0" }}>This month</h4>
@@ -49,7 +50,7 @@ export default function Dashboard(){
 
             <div className={styles["dashboard-item"]}>
 
-                <DarkBox width="45%" height="90%" minwidth="300px" background="#0f0b1f">
+                <DarkBox style = {{ width : "45%", height : "90%", minwidth : "300px", background : "#0f0b1f"}}>
 
                     <div className={styles["dashboard-head"]}>
                         <h4>Balance</h4>
@@ -63,15 +64,17 @@ export default function Dashboard(){
 
                 </DarkBox>
 
-                <DarkBox width="45%" height="90%" minwidth="300px" background="#0f0b1f">
+                <DarkBox style = {{ width : "45%", height : "90%", minwidth : "300px", background : "#0f0b1f"}}>
 
                     <div className={styles["dashboard-head"]}>
                         <h4>Banks</h4>
                     </div>  
                     
-                    <div className={styles["dashboard-content"]}>
-                        <DarkBox> <p>Nubank</p> </DarkBox>
-                        <DarkBox> <p>Nubank</p> </DarkBox>
+                    <div className={styles["dashboard-content-banks"]}>
+                        <DarkBox to="/login" style = {{  width:"90%", height : "25%", background : "#16102f", justifyContent : 'center', alignItems : 'flex-start', padding : '5%' }}>Nubank</DarkBox>
+                        <DarkBox to="/login" style = {{  width:"90%", height : "25%", background : "#16102f", justifyContent : 'center', alignItems : 'flex-start', padding : '5%' }}>Nubank</DarkBox>
+                        <DarkBox to="/login" style = {{  width:"90%", height : "25%", background : "#16102f", justifyContent : 'center', alignItems : 'flex-start', padding : '5%' }}>Nubank</DarkBox>
+                        <DarkBox to="/login" style = {{  width:"90%", height : "25%", background : "#16102f", justifyContent : 'center', alignItems : 'flex-start', padding : '5%' }}>Nubank</DarkBox>
                     </div>
 
                 </DarkBox>
@@ -80,10 +83,9 @@ export default function Dashboard(){
 
             <div className={styles["dashboard-item"]}>
 
-                <DarkBox width="95%" height="90%" background="#0f0b1f">
+                <DarkBox style = {{ width : "95%", height : "90%", background : "#0f0b1f"}}>
                     <div className={styles["dashboard-head"]}>
-                        <p>Expenses Planning by Category</p>
-                        <p>This month</p>
+                        <h4 >Expenses Planning by Category</h4>
                     </div>
                     <div className={styles["dashboard-content"]}>
 
@@ -94,20 +96,20 @@ export default function Dashboard(){
 
             <div className={styles["dashboard-item"]}>
 
-                <DarkBox width="95%" height="90%" background="#0f0b1f">
+                <DarkBox style = {{ width : "95%", height : "90%", backgroundColor : "#0f0b1f" }}>
 
                     <div className={styles["dashboard-head"]}>
-                        <p>Invoices</p>
+                        <h4>Invoices</h4>
                     </div>
 
-                    <div className={styles["dashboard-content"]}>
+                    <div className={styles["dashboard-content"]} style = {{ visibility: "hidden" }}>
                         <DarkBox> <p>Nubank</p> </DarkBox>
                         <DarkBox> <p>Nubank</p> </DarkBox>
                         <DarkBox> <p>Nubank</p> </DarkBox>
                         <DarkBox> <p>Nubank</p> </DarkBox>
                     </div>
 
-                    <div>
+                    <div style = {{ visibility: "hidden" }}>
                         <p>Total</p>
                         <p>2500.50</p>
                     </div>

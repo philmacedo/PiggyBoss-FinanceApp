@@ -22,11 +22,12 @@ export default function SimpleRadio({label, options, width, height}) {
            justifyContent: 'space-around',
            alignItems: 'center',
            width : width || "100%",
-           height : height || "100%",  
-        }}
+           height : height || "100%",
+          
+          }}
         >
         {options.map((opt, index) => (
-          <FormControlLabel key={index} value={opt} control={<Radio />} label={opt} />
+          <FormControlLabel key={index} value={opt} control={<Radio sx = {{ color: '#FF66C4', '&.Mui-checked': { color: '#9B59B6' }}} /> } label={opt} />
         ))}
         </RadioGroup>
     </FormControl>

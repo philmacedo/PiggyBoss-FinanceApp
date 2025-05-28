@@ -47,7 +47,7 @@ export default function Login() {
 
   const LOGIN_PAGE = (
     <div className={styles['account-page']}>
-        <DarkBox width="20%" height="55%"  minwidth="280px" minheight="500px" background="#2C2C3D">
+        <DarkBox style = {{ width : "20%", height : "55%", minwidth : "280px", minheight : "500px", background : "#2C2C3D"}}>
 
           <div style={{ height: '25%', margin: '5% 0 0 0' }}> 
             <img src={logo} alt="Logo" className={styles['logo']} />
