@@ -38,7 +38,7 @@ export default function Login() {
       try {
         const response = await API["account"].post('/login/', formData);
         localStorage.setItem('token', response.data.access);
-        navigate('/');
+        navigate('/transactions');
       } 
       catch (err) {
         console.log(err.response?.data)

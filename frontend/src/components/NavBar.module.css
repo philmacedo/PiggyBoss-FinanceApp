@@ -1,8 +1,24 @@
 nav {
-    background-color: rgba(0, 0, 0, 0.5);
+    background: linear-gradient(135deg, #1E1E2F, #9B59B6);
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
     height: 5%;
+}
+
+.logo {
+  height: 50px; /* ou outro tamanho que desejar */
+  margin-right: 0.5rem;
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+}
+
+.user-info {
+  font-weight: bold;
 }
 
 .left-side {
@@ -14,7 +30,11 @@ nav {
 }
 
 .left-side p {
-    margin: 0% 2%
+    margin: 0% 2%;
+    color: white;
+    transition: color 0.3s ease;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5); /*Sombra atrás do texto */
+    cursor: pointer;
 }
 
 .right-side {
@@ -26,5 +46,29 @@ nav {
 }
 
 .right-side p {
-    margin: 0% 2%
+    margin: 0% 2%;
+    color: white;
+    transition: color 0.3s ease;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5); /* Sombra atrás do texto */
+    cursor: pointer;
+}
+
+.left-side p:hover,
+.right-side p:hover {
+  color: #FF66C4; /* Muda de cor ao passar mouse */
+}
+
+.left-side a,
+.right-side a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  position: relative;
+  transition: color 0.3s ease;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.left-side a:hover,
+.right-side a:hover {
+  color: #FF66C4;
 }
