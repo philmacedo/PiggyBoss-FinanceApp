@@ -4,36 +4,17 @@ import styles from "./NavBar.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 
+import { useAuth } from "../context/AuthContext";
+
 export default function NavBar(){
-    const [userInfo, setUserInfo] = useState(null);
+    const { userInfo, logout } = useAuth();
     const navigate = useNavigate();
-    
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (!token) return;
-
-        const fetchUserInfo = async () => {
-            try {
-                const response = await API["main"].get("/account/me/", {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-                setUserInfo(response.data);
-            } catch (err) {
-                console.error("User search error:", err);
-            }
-        };
-
-        fetchUserInfo();
-    }, []);
 
     const handleLogout = () => {
-        localStorage.removeItem("token");
-        setUserInfo(null);
-        navigate("/login");
+        logout();
+        navigate("/");
     };
 
-
-    
     const NAVBAR = (
         <nav>
             <div className={styles['left-side']}>
@@ -46,13 +27,22 @@ export default function NavBar(){
             </div>
             
             <div className={styles['right-side']}>
-                <Link to="/login" className={styles['nav-link']}>Login</Link>
-                <p>Profile</p>
-          
+                {userInfo ? (
+                    <>
+                        <span className={styles["user-info"]}>
+                            Welcome, {userInfo.full_name}
+                        </span>
+                        <button onClick={handleLogout} className={styles['logout-button']}>
+                            Logout
+                        </button>
+                    </>
+                ) : (
+                    <Link to="/" className={styles['nav-link']}>Login</Link>
+                )}
+                
             </div>
         </nav>
-    )
+    );
     
-    return NAVBAR
+    return NAVBAR;
 }
-

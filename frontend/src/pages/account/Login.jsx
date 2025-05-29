@@ -9,6 +9,7 @@ import DarkBox from "../../components/DarkBox";
 import Message from "../../components/Message"; 
 
 import { useLocation } from "react-router-dom";
+import { useAuth } from '../../context/AuthContext';
 
 
 export default function Login() {
@@ -33,10 +34,13 @@ export default function Login() {
     });
   };
 
+  const { login } = useAuth();
+
   const handleSubmit = async (e) => {
       e.preventDefault();
       try {
         const response = await API["account"].post('/login/', formData);
+        login(response.data.access);
         localStorage.setItem('token', response.data.access);
         navigate('/transactions');
       } 

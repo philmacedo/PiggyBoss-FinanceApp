@@ -72,3 +72,16 @@ nav {
 .right-side a:hover {
   color: #FF66C4;
 }
+
+
+.logout-button {
+  background: transparent;
+  border: 1px solid white;
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.logout-button:hover {
+  background-color: #444;
+}

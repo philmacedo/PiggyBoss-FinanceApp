@@ -6,16 +6,20 @@ import './styles/App.css';
 import ForgotPassword from "./pages/account/ForgotPassword";
 import Transactions from './pages/finance/Transactions.jsx';
 
+import { AuthProvider } from './context/AuthContext';
+
 export default function App() {
   return (
     <Router>
-      <NavBar />
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/transactions" element={<Transactions />} />
-      </Routes>
+      <AuthProvider>
+        <NavBar />
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/transactions" element={<Transactions />} />
+        </Routes>
+      </AuthProvider>
     </Router>
   );
 
