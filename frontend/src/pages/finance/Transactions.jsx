@@ -52,7 +52,7 @@ export default function Transactions() {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await API["main"].get("/transactions/", {
+      const response = await API["finance"].get("/transactions/", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setTransactions(response.data);
@@ -72,10 +72,10 @@ export default function Transactions() {
       const token = localStorage.getItem("token");
       const config = { headers: { Authorization: `Bearer ${token}` } };
       const [catRes, cardRes, bankRes, thirdRes] = await Promise.all([
-        API["main"].get("/category/", config),
-        API["main"].get("/card/", config),
-        API["main"].get("/bank_account/", config),
-        API["main"].get("/third/", config),
+        API["finance"].get("/category/", config),
+        API["finance"].get("/card/", config),
+        API["finance"].get("/bank_account/", config),
+        API["finance"].get("/third/", config),
       ]);
 
       setCategories(catRes.data);
@@ -113,7 +113,7 @@ export default function Transactions() {
 
     try {
       const token = localStorage.getItem("token");
-      await API["main"].post("/transactions/", formData, {
+      await API["finance"].post("/transactions/", formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setSuccess('Transaction added successfully!');
