@@ -10,6 +10,7 @@ nav {
 .logo {
   height: 50px; /* ou outro tamanho que desejar */
   margin-right: 0.5rem;
+  margin-top: 0.5rem;
 }
 
 .nav-link {

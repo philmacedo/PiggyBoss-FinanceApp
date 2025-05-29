@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import API from "../../api";
 import styles from "./Transactions.module.css";
-import logo from "../../assets/logo.png";
+import nerd from "../../assets/nerd.png";
 
 import DarkBox from "../../components/DarkBox";
 import FormField from "../../components/FormField";
@@ -137,7 +137,7 @@ export default function Transactions() {
       <DarkBox width="30%" minwidth="300px" height="auto">
 
         <div style={{margin: '5% 0 0 0' }}> 
-            <img src={logo} alt="Logo" className={styles['logo']} />
+            <img src={nerd} alt="Logo" className={styles['logo']} />
         </div>
         <h2 className={styles.title}>Register Your Transactions</h2>
 
