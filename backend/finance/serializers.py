@@ -6,7 +6,8 @@ class BankAccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = BankAccount
         fields = "__all__"
-        read_only_fields = ['profile'] 
+        read_only_fields = ['profile']
+        depth = 1
         
     account_type = serializers.ChoiceField(
         choices = [

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'account',
     'finance',
     'corsheaders',
+    'colorfield',
 ]
 
 REST_FRAMEWORK = {

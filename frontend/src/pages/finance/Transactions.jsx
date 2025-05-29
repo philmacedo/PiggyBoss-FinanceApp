@@ -134,23 +134,14 @@ export default function Transactions() {
 
   return (
     <div className={styles["transactions-page"]}>
-      <DarkBox width="30%" minwidth="300px" height="auto" minheight="500px" >
+      <DarkBox width="30%" minwidth="300px" height="auto">
 
-        <div style={{ height: '25%', margin: '5% 0 0 0' }}> 
+        <div style={{margin: '5% 0 0 0' }}> 
             <img src={logo} alt="Logo" className={styles['logo']} />
         </div>
         <h2 className={styles.title}>Register Your Transactions</h2>
 
-        <ul className={styles["transactions-list"]}>
-          {transactions.map((tx) => (
-            <li key={tx.id} className={styles["transaction-item"]}>
-              <strong>{tx.name}</strong> - R$ {parseFloat(tx.amount).toFixed(2)}<br />
-              <span>{tx.transactions_type} • {tx.payment_method} • {tx.date}</span>
-            </li>
-          ))}
-        </ul>
-
-        <form onSubmit={handleSubmit} style={{ width: '90%', height: '55%'}}>
+        <form onSubmit={handleSubmit} style={{ width: '90%'}}>
             <div className={styles['form-container']}></div>
                 <FormField
                     key = "name" 
@@ -282,7 +273,7 @@ export default function Transactions() {
                         Select a bank
                        </option>
                         {banks.map(bank => (
-                         <option key={bank.id} value={bank.id}>{bank.name}</option>
+                         <option key={bank.id} value={bank.id}>{bank.institution.name}</option>
                         ))}
                     </select>
                 </FormField>
@@ -291,16 +282,15 @@ export default function Transactions() {
                   
                     name="third" 
                     label="Third"
-                    required width="100%">
+                    width="100%">
                     <select
                         name="third"
                         value={formData.third}
-                        onChange={handleChange}
-                        
-                        required
+                        onChange={handleChange} 
+            
                     >
-                       <option value="" disabled>
-                        Select a third
+                       <option value="">
+                        Select a third (Optional)
                        </option>
                         {thirds.map(third => (
                          <option key={third.id} value={third.id}>{third.name}</option>
@@ -327,6 +317,21 @@ export default function Transactions() {
         {error && <p className={styles.message}>{error}</p>}
         {success && <p className={styles.message} style={{ color: 'lightgreen' }}>{success}</p>}
       </DarkBox>
+
+
+      <DarkBox width="30%" minwidth="300px" height="auto" minheight="100px">
+        <h2 className={styles.title}>Transactions List</h2>
+        <ul className={styles["transactions-list"]}>
+          {transactions.map((tx) => (
+            <li key={tx.id} className={styles["transaction-item"]}>
+              <strong>{tx.name}</strong> - R$ {parseFloat(tx.amount).toFixed(2)}<br />
+              <span>{tx.transactions_type} • {tx.payment_method} • {tx.date}</span>
+            </li>
+          ))}
+        </ul>
+      </DarkBox>
+
+
     </div>
   );
 }
