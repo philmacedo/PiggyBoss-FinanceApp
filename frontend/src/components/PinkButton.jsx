@@ -1,14 +1,15 @@
 import styles from './PinkButton.module.css';
 
-export default function PinkButton({ text, width, height, margin, color }) {
-    const style = {
-        width: width || 'auto',
-        height: height || 'auto',
-        margin: margin || '0',
-        backgroundColor: color || '#FF66C4'
+export default function PinkButton({ text, style }) {
+    const customstyle = {
+        width: 'auto',
+        height: 'auto',
+        margin: '0',
+        backgroundColor: '#FF66C4',
+        ...style
     };
 
-    return <button type="submit" className={styles['pink-button']} style={style}>
+    return <button type="submit" className={styles['pink-button']} style={customstyle}>
         {text}
     </button>
 }

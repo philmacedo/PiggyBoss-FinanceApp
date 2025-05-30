@@ -76,7 +76,7 @@ export default function Register() {
 
   const REGISTER_PAGE = (
     <div className={styles['account-page']}>
-        <DarkBox style = {{width:"20%", height:"80%",  minwidth:"280px", minheight:"700px", background:"#2C2C3D"}}>
+        <DarkBox style = {{width:"20%", height:"80%",  minWidth:"280px", minHeight:"700px", maxHeight:"700px", background:"#2C2C3D"}}>
 
           <div style={{ height: '15%', margin: '5% 0 0 0' }}>
             <img src={logo} alt="Logo" className={styles['logo']} />
