@@ -46,7 +46,7 @@ html, body {
 .title {
   font-size: 2rem;
   font-weight: bold;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   text-align: center;
 }
 
@@ -91,6 +91,38 @@ html, body {
   justify-content: center;
   margin-top: 0.5rem;
 }
+
+
+.hide-button {
+  padding: 0.25rem 0.5rem;
+  background: #FF4C4C;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.hide-button:hover {
+  background: #E03B3B;
+}
+
+
+.show-all-button {
+  margin-bottom: 1rem;
+  padding: 0.5rem 0.5rem;
+  background: #6e45e2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.show-all-button:hover {
+  background: #5a37c8;
+}
+
 
 @keyframes logo-spin {
   from {

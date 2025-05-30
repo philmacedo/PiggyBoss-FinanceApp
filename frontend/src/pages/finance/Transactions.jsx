@@ -132,6 +132,22 @@ export default function Transactions() {
     }
   };
 
+
+  // controlar itens ocultados
+  const [hiddenTransactions, setHiddenTransactions] = useState([]);
+
+  const handleHideTransaction = (id) => {
+    setHiddenTransactions(prev => [...prev, id]);
+  };
+
+  // lista de histórico
+  const handleShowAll = () => {
+  setHiddenTransactions([]);
+  };
+
+
+
+
   return (
     <div className={styles["transactions-page"]}>
       <DarkBox width="30%" minwidth="300px" height="auto">
@@ -321,11 +337,20 @@ export default function Transactions() {
 
       <DarkBox width="30%" minwidth="300px" height="auto" minheight="100px">
         <h2 className={styles.title}>Transactions List</h2>
+        <button className={styles["show-all-button"]} onClick={handleShowAll}>
+          Show All History
+        </button>
+
         <ul className={styles["transactions-list"]}>
-          {transactions.map((tx) => (
+          {transactions.filter(tx => !hiddenTransactions.includes(tx.id)).map((tx) => (
             <li key={tx.id} className={styles["transaction-item"]}>
               <strong>{tx.name}</strong> - R$ {parseFloat(tx.amount).toFixed(2)}<br />
-              <span>{tx.transactions_type} • {tx.payment_method} • {tx.date}</span>
+              <span>{tx.transactions_type} • {tx.payment_method} • {tx.date} • </span>
+              <button className={styles["hide-button"]}
+                onClick={() => handleHideTransaction(tx.id)}
+              >
+                Hide
+              </button>
             </li>
           ))}
         </ul>
