@@ -55,7 +55,7 @@ export default function Register() {
       };
       const response = await API["account"].post('/register/', dataToSend);
       setError('');
-      navigate('/');
+      navigate('/', { state: { successMessage: 'Cadastro realizado com sucesso!' } });;
       
     } catch (err) {
       if (err.response?.data){
@@ -72,6 +72,7 @@ export default function Register() {
     { label: 'Email', name: 'email', type: 'email', placeholder: 'Enter your email', required: true, width: '80%'},
     { label: 'Password', name: 'password1', type: 'password', placeholder: 'Enter your password', required: true, width: '80%'},
     { label: 'Confirm Password', name: 'password2', type: 'password', placeholder: 'Confirm your password', required: true, width: '80%'},
+    { label: 'Date of Birth', name: 'date_of_birth', type: 'date', placeholder: 'dd/mm/aaaa', required: true, width: '80%'},
   ];
 
   const REGISTER_PAGE = (

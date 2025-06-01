@@ -1,8 +1,26 @@
 nav {
-    background-color: rgba(0, 0, 0, 0);
+    background: linear-gradient(135deg, #1E1E2F, #9B59B6);
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
     height: 5%;
+}
+
+.logo {
+  height: 50px; /* ou outro tamanho que desejar */
+  margin-right: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+}
+
+.user-info {
+  font-weight: bold;
+  padding-right: 1rem;
 }
 
 .left-side {
@@ -13,8 +31,12 @@ nav {
     height: 100%;
 }
 
-.left-side h4 {
-    margin: 0% 2%
+.left-side p {
+    margin: 0% 2%;
+    color: white;
+    transition: color 0.3s ease;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5); /*Sombra atrás do texto */
+    cursor: pointer;
 }
 
 .right-side {
@@ -25,6 +47,43 @@ nav {
     height: 100%;
 }
 
-.right-side h4 {
-    margin: 0% 2%
+.right-side p {
+    margin: 0% 2%;
+    color: white;
+    transition: color 0.3s ease;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5); /* Sombra atrás do texto */
+    cursor: pointer;
+}
+
+.left-side p:hover,
+.right-side p:hover {
+  color: #FF66C4; /* Muda de cor ao passar mouse */
+}
+
+.left-side a,
+.right-side a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  position: relative;
+  transition: color 0.3s ease;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.left-side a:hover,
+.right-side a:hover {
+  color: #FF66C4;
+}
+
+
+.logout-button {
+  background: transparent;
+  border: 1px solid white;
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.logout-button:hover {
+  background-color: #444;
 }

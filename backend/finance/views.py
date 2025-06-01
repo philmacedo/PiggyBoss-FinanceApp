@@ -8,7 +8,7 @@ class BankAccountViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Card.objects.filter(profile=self.request.user.profile)
+        return BankAccount.objects.filter(profile=self.request.user.profile)
 
 class CardViewSet(viewsets.ModelViewSet):
     queryset = Card.objects.all()
@@ -24,7 +24,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Card.objects.filter(profile=self.request.user.profile)
+        return Category.objects.filter(profile=self.request.user.profile)
 
 class ThirdViewSet(viewsets.ModelViewSet):
     queryset = Third.objects.all()
@@ -32,7 +32,7 @@ class ThirdViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Card.objects.filter(profile=self.request.user.profile)
+        return Third.objects.filter(profile=self.request.user.profile)
 
 class TransactionsViewSet(viewsets.ModelViewSet):
     queryset = Transactions.objects.all()
@@ -40,7 +40,7 @@ class TransactionsViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Card.objects.filter(profile=self.request.user.profile)
+        return Transactions.objects.filter(profile=self.request.user.profile)
 
 class CreditCardBillViewSet(viewsets.ModelViewSet):
     queryset = CreditCardBill.objects.all()
@@ -48,4 +48,4 @@ class CreditCardBillViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Card.objects.filter(profile=self.request.user.profile)
+        return CreditCardBill.objects.filter(profile=self.request.user.profile)

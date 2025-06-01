@@ -8,6 +8,10 @@ import PinkButton from "../../components/PinkButton";
 import DarkBox from "../../components/DarkBox";
 import Message from "../../components/Message"; 
 
+import { useLocation } from "react-router-dom";
+import { useAuth } from '../../context/AuthContext';
+
+
 export default function Login() {
   useEffect(() => {
     document.title = "Login"
@@ -19,8 +23,15 @@ export default function Login() {
   }, []);
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const registrationMessage = location.state?.successMessage || '';
+  
   const [formData, setFormData] = useState({ email: '', password: '',});
   const [error, setError] = useState('');
+
+  const [successMessage, setSuccessMessage] = useState(registrationMessage);
+  
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -28,12 +39,15 @@ export default function Login() {
     });
   };
 
+  const { login } = useAuth();
+
   const handleSubmit = async (e) => {
       e.preventDefault();
       try {
         const response = await API["account"].post('/login/', formData);
+        login(response.data.access);
         localStorage.setItem('token', response.data.access);
-        navigate('/');
+        navigate('/transactions');
       } 
       catch (err) {
         console.log(err.response?.data)
@@ -78,6 +92,20 @@ export default function Login() {
                 required={true} 
                 width="80%"
               />
+
+              <div style={{ width: "80%", textAlign: "center", marginBottom: "1rem" }}>
+                <Link
+                  to="/forgot-password"
+                  style={{
+                    textDecoration: "underline",
+                    color: "inherit",
+                    fontSize: "0.95rem",
+                    cursor: "pointer"
+                  }}
+                >
+                  Forgot password?
+                </Link>
+              </div>
 
               <PinkButton text="Sign in" width="35%" height="15%" />
               </div>
