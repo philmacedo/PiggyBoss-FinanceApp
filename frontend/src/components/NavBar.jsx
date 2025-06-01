@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import API from "../api";
+import API from "../utils/api";
 import styles from "./NavBar.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
@@ -18,10 +18,8 @@ export default function NavBar(){
     const NAVBAR = (
         <nav>
             <div className={styles['left-side']}>
-                <Link to="/">
-                    <img src={logo} alt="Logo" className={styles['logo']} />
-                </Link>
-                <p>Dashboard</p>
+                <Link to="/"> <img src={logo} alt="Logo" className={styles['logo']} /> </Link>
+                <Link to="/dashboard" className={styles['nav-link']}>Dashboard</Link>
                 <p>Cards and Banks</p>
                 <Link to="/transactions" className={styles['nav-link']}>Transactions</Link>
             </div>

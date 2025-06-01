@@ -4,7 +4,7 @@ import DarkBox from "../../components/DarkBox";
 import FormField from "../../components/FormField";
 import PinkButton from "../../components/PinkButton";
 import { Link } from "react-router-dom";
-import API from "../../api";
+import API from "../../utils/api";
 import modalStyles from "./ForgotPassword.module.css";
 import logo from "../../assets/logo.png";
 

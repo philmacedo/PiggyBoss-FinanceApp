@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Account.module.css";
-import API from "../../api";
+import API from "../../utils/api";
 import logo from "../../assets/logo.png";
 import FormField from "../../components/FormField"; 
 import PinkButton from "../../components/PinkButton";
@@ -67,12 +67,12 @@ export default function Register() {
   };
 
   const FIELDS = [
-    { label: 'First Name', name: 'first_name', type: 'text', placeholder: 'Enter your first name', required: true, width: '80%'},
-    { label: 'Last Name', name: 'last_name', type: 'text', placeholder: 'Enter your last name', required: true, width: '80%'},
-    { label: 'Email', name: 'email', type: 'email', placeholder: 'Enter your email', required: true, width: '80%'},
-    { label: 'Password', name: 'password1', type: 'password', placeholder: 'Enter your password', required: true, width: '80%'},
-    { label: 'Confirm Password', name: 'password2', type: 'password', placeholder: 'Confirm your password', required: true, width: '80%'},
-    { label: 'Date of Birth', name: 'date_of_birth', type: 'date', placeholder: 'dd/mm/aaaa', required: true, width: '80%'},
+    { label: 'First Name', name: 'first_name', type: 'text', placeholder: 'Enter your first name', required: true},
+    { label: 'Last Name', name: 'last_name', type: 'text', placeholder: 'Enter your last name', required: true },
+    { label: 'Email', name: 'email', type: 'email', placeholder: 'Enter your email', required: true },
+    { label: 'Password', name: 'password1', type: 'password', placeholder: 'Enter your password', required: true },
+    { label: 'Confirm Password', name: 'password2', type: 'password', placeholder: 'Confirm your password', required: true },
+    { label: 'Date of Birth', name: 'date_of_birth', type: 'date', placeholder: 'dd/mm/aaaa', required: true },
   ];
 
   const REGISTER_PAGE = (
@@ -95,7 +95,7 @@ export default function Register() {
                 onChange={handleChange} 
                 placeholder={field.placeholder}
                 required={field.required}
-                width={field.width}
+                width= "80%"
               />
             ))}
             <PinkButton text="Sign up" width="35%" height="9%" margin="3% 0 0 0"/>

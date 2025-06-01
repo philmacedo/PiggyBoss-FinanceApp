@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Account.module.css"
-import API from "../../api";
+import API from "../../utils/api";
 import logo from "../../assets/logo.png";
 import FormField from "../../components/FormField";
 import PinkButton from "../../components/PinkButton";
@@ -23,14 +23,9 @@ export default function Login() {
   }, []);
 
   const navigate = useNavigate();
-  const location = useLocation();
-  const registrationMessage = location.state?.successMessage || '';
   
   const [formData, setFormData] = useState({ email: '', password: '',});
   const [error, setError] = useState('');
-
-  const [successMessage, setSuccessMessage] = useState(registrationMessage);
-  
 
   const handleChange = (e) => {
     setFormData({
@@ -47,7 +42,8 @@ export default function Login() {
         const response = await API["account"].post('/login/', formData);
         login(response.data.access);
         localStorage.setItem('token', response.data.access);
-        navigate('/transactions');
+        localStorage.setItem('refresh', response.data.refresh);
+        navigate('/dashboard');
       } 
       catch (err) {
         console.log(err.response?.data)

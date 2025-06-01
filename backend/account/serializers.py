@@ -97,16 +97,3 @@ class LoginSerializer(serializers.Serializer):
             'access': str(refresh.access_token),
             'refresh': str(refresh),
         }
-
-        #email = data.get('email')
-        password = data.get('password')
-
-        user = User.objects.filter(email=email).first()
-        if user is None or not user.check_password(password):
-            raise AuthenticationFailed('Invalid credentials.')
-
-        refresh = RefreshToken.for_user(user)
-        return {
-            'access': str(refresh.access_token),
-            'refresh': str(refresh),
-        }
