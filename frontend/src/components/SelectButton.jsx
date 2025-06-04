@@ -23,7 +23,7 @@ export default function SelectButton({label, options, width, height}) {
 
   return (
     <FormControl fullWidth sx = {{ display: 'flex', flexDirection: 'column',  alignItems: 'center', width: "100%" }}>
-        <InputLabel id="select-label" sx={{ color: '#f5f5f5', padding: '0 10%' }}>Bank</InputLabel>
+        <InputLabel id="select-label" sx={{ color: '#f5f5f5', padding: '0 10%' }}>{label}</InputLabel>
         <Select
           labelId="select-label"
           value={option}

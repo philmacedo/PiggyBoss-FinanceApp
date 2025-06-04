@@ -7,7 +7,6 @@ import SimpleCard from "../../components/SimpleCard";
 import SelectButton from "../../components/SelectButton";
 import SimpleRadio from "../../components/SimpleRadio";
 import BarGraph from "../../components/BarGraph";
-import { height } from "@mui/system";
 
 export default function Dashboard(){
     useEffect(() => {
@@ -27,16 +26,15 @@ export default function Dashboard(){
                 <DarkBox style = {{width : "95%", height : "90%", minwidth : "600px", background : "#0f0b1f"}}>
 
                     <div className={styles["dashboard-head"]}>
-                        <h4 style={{ padding: "0 5% 0 0" }}>This month</h4>
-                        <h4>Nubank</h4>
+                        <h4>This month</h4>
                     </div>
 
                     <div className={styles["dashboard-content-expenses"]}>
-                        <SimpleCard title="Current Bill" value="1234.50" width="90%" height="70%"/>
-                        <SimpleCard title="Total Expenses" value="500.50" width="90%" height="70%"/>
+                        <SimpleCard title="Balance" value="1234.50" width="90%" height="70%"/>
+                        <SimpleCard title="Current Bill" value="500.50" width="90%" height="70%"/>
 
                         <div className={styles["remaining"]}>
-                            <p>Remaining Balance Planned</p>
+                            <p>Total Expenses</p>
                             <p>550.50</p>
                         </div>
                         
@@ -55,10 +53,10 @@ export default function Dashboard(){
                 <DarkBox style = {{ width : "45%", height : "90%", minwidth : "300px", background : "#0f0b1f"}}>
 
                     <div className={styles["dashboard-head"]}>
-                        <h4>Balance</h4>
+                        <h4>Expenses</h4>
                     </div>
         
-                    <div className={styles["dashboard-content-balance"]}>
+                    <div className={styles["dashboard-content-expense"]}>
                         <SelectButton label="Card" options={['Nubank', 'Nubank', 'Nubank']} width="85%" />
                         <SimpleRadio options={['Credit', 'Debit']} width="70%" />
                         <PinkButton text="Add Expense" style = {{ width:"50%", height:"25%", backgroundColor:"#f1109b", minWidth: "100px", minHeight: "60px"  }}  />
@@ -73,10 +71,10 @@ export default function Dashboard(){
                     </div>  
                     
                     <div className={styles["dashboard-content-banks"]}>
-                        <DarkBox to="/login" style = {{  width:"90%", height : "25%", background : "#16102f", justifyContent : 'center', alignItems : 'flex-start', padding : '5%' }}>Nubank</DarkBox>
-                        <DarkBox to="/login" style = {{  width:"90%", height : "25%", background : "#16102f", justifyContent : 'center', alignItems : 'flex-start', padding : '5%' }}>Nubank</DarkBox>
-                        <DarkBox to="/login" style = {{  width:"90%", height : "25%", background : "#16102f", justifyContent : 'center', alignItems : 'flex-start', padding : '5%' }}>Nubank</DarkBox>
-                        <DarkBox to="/login" style = {{  width:"90%", height : "25%", background : "#16102f", justifyContent : 'center', alignItems : 'flex-start', padding : '5%' }}>Nubank</DarkBox>
+                        <DarkBox to="/login" style = {{  width:"90%", height : "25%", background : "#16102f", justifyContent : 'center', alignItems : 'flex-start', padding : '8%' }}>Nubank</DarkBox>
+                        <DarkBox to="/login" style = {{  width:"90%", height : "25%", background : "#16102f", justifyContent : 'center', alignItems : 'flex-start', padding : '8%' }}>Nubank</DarkBox>
+                        <DarkBox to="/login" style = {{  width:"90%", height : "25%", background : "#16102f", justifyContent : 'center', alignItems : 'flex-start', padding : '8%' }}>Nubank</DarkBox>
+                        <DarkBox to="/login" style = {{  width:"90%", height : "25%", background : "#16102f", justifyContent : 'center', alignItems : 'flex-start', padding : '8%' }}>Nubank</DarkBox>
                     </div>
 
                 </DarkBox>
@@ -85,11 +83,11 @@ export default function Dashboard(){
 
             <div className={styles["dashboard-item"]}>
 
-                <DarkBox style = {{ width : "95%", height : "90%", background : "#0f0b1f"}}>
+                <DarkBox style = {{ width : "95%", height : "90%", background : "#0f0b1f" }}>
                     <div className={styles["dashboard-head"]}>
                         <h4 >Expenses Planning by Category</h4>
                     </div>
-                    <div className={styles["dashboard-content-expenses-planning"]}>
+                    <div className={styles["dashboard-content-expenses-planning"]} style={{ width: '95%', height: '80%' }}>
                         <BarGraph />
                     </div>
                 </DarkBox>
@@ -101,17 +99,17 @@ export default function Dashboard(){
                 <DarkBox style = {{ width : "45%", height : "90%", minwidth : "300px", background : "#0f0b1f"}}>
 
                     <div className={styles["dashboard-head"]}>
-                        <h4>Investments</h4>
+                        <h4>Budgets</h4>
                     </div>
 
                     <div className={styles["dashboard-content-invoices"]} style = {{ }}>
                         <DarkBox to="/login" style = {{  width:"90%", height : "25%", background : "#16102f", flexDirection:"row", justifyContent : 'space-between', alignItems : 'center', padding : '5%' }}>
-                        <p>Trip</p>
-                        <p>R$ 100</p>
+                        <p>Food</p>
+                        <p>R$ 100 / 1000</p>
                         </DarkBox>
                         <DarkBox to="/login" style = {{  width:"90%", height : "25%", background : "#16102f", flexDirection:"row", justifyContent : 'space-between', alignItems : 'center', padding : '5%' }}>
-                        <p>Safe</p>
-                        <p>R$ 100</p>
+                        <p>Shop</p>
+                        <p>R$ 100 / 1000</p>
                         </DarkBox>                    
                     </div>
 

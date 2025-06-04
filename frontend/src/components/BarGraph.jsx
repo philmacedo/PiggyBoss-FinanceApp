@@ -41,5 +41,5 @@ const options = {
 };
 
 export default function BarGraph({ style }) {
-  return <Bar data={data} options={options} style={{...style }}/>;
+  return <Bar data={data} options={options}/>;
 }
