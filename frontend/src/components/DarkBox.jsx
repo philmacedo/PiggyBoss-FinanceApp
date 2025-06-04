@@ -15,7 +15,7 @@ export default function DarkBox({ children, to, style }){
 
     const Tag = to ? Link : 'div'
 
-    const darkbox = <Tag to={to} className={styles['dark-box']} style={{...customstyle, }}>
+    const darkbox = <Tag to={to} className={styles['dark-box']} style={{...customstyle }}>
         {children}
     </Tag>
 

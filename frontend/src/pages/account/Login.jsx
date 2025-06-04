@@ -7,8 +7,6 @@ import FormField from "../../components/FormField";
 import PinkButton from "../../components/PinkButton";
 import DarkBox from "../../components/DarkBox";
 import Message from "../../components/Message"; 
-
-import { useLocation } from "react-router-dom";
 import { useAuth } from '../../context/AuthContext';
 
 
@@ -36,25 +34,27 @@ export default function Login() {
 
   const { login } = useAuth();
 
-  const handleSubmit = async (e) => {
-      e.preventDefault();
-      try {
-        const response = await API["account"].post('/login/', formData);
-        login(response.data.access);
-        localStorage.setItem('token', response.data.access);
-        localStorage.setItem('refresh', response.data.refresh);
-        navigate('/dashboard');
-      } 
-      catch (err) {
-        console.log(err.response?.data)
-        if (err.response?.data){
-          setError(Object.values(err.response.data).flat().join(' '));
-        } else {
-          setError('Erro no registro.');
-        }
-      }
-  };
+  const [loading, setLoading] = useState(false);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    if (loading) return
+
+    setLoading(true)
+    try {
+      await login(formData)
+      navigate('/dashboard')
+    } catch (err) {
+      console.log(err.response?.data)
+      if (err.response?.data){
+        setError(Object.values(err.response.data).flat().join(' '))
+      } else {
+        setError('Error.')
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
   const LOGIN_PAGE = (
     <div className={styles['account-page']}>
         <DarkBox style = {{ width : "20%", height : "55%", maxHeight: "600px" , minWidth : "280px", minHeight : "500px", background : "#2C2C3D"}}>
@@ -74,7 +74,7 @@ export default function Login() {
                 onChange=  {handleChange} 
                 placeholder="Enter your e-mail" 
                 required={true}
-                width="80%"
+                style = {{ width: "80%" }}
               />
 
               <FormField
@@ -86,7 +86,7 @@ export default function Login() {
                 onChange=  {handleChange} 
                 placeholder="Enter your password" 
                 required={true} 
-                width="80%"
+                style = {{ width: "80%" }}
               />
 
               <div style={{ width: "80%", textAlign: "center", marginBottom: "1rem" }}>
@@ -103,7 +103,7 @@ export default function Login() {
                 </Link>
               </div>
 
-              <PinkButton text="Sign in" width="35%" height="15%" />
+              <PinkButton text="Sign in" width="35%" height="15%" disabled={loading}/>
               </div>
           </form>
 

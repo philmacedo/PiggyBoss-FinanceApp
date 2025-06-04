@@ -1,11 +1,8 @@
 import styles from './FormField.module.css';
 
-export default function FormField({ name, label, type, value, onChange, placeholder, required = false,  width, children}){
-    const style = {
-        width: width || 'auto',
-    };
+export default function FormField({ name, label, type, value, onChange, placeholder, required = false, style, children}){
     
-    return <div className={styles['form-field']} style={style}>
+    return <div className={styles['form-field']} style={{...style}}>
         <label htmlFor={label}>{label}</label>
         {children ? (
             children

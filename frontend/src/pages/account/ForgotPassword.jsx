@@ -49,7 +49,7 @@ export default function ForgotPassword() {
         </div>
       )}
       <div className={styles['account-page']}>
-        <DarkBox width="30%" height="60%" minwidth="280px" minheight="500px">
+        <DarkBox style = {{width:"30%", height:"60%", minwidth:"280px", minheight:"500px" }}>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", margin: "5% 0 0 0" }}>
             <div style={{ fontSize: 40, marginBottom: 16 }}>🔒</div>
           </div>
@@ -68,7 +68,7 @@ export default function ForgotPassword() {
                 onChange={handleChange}
                 placeholder="Email or number"
                 required={true}
-                width="80%"
+                style={{ width: "80%"}}
               />
               <PinkButton text="Send login link" width="80%" height="2.5rem" style={{ margin: "1rem 0" }} />
               <div style={{ textAlign: "center", margin: "1rem 0", color: "#ccc", fontSize: "0.95rem" }}>

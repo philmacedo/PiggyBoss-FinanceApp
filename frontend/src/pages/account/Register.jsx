@@ -95,10 +95,10 @@ export default function Register() {
                 onChange={handleChange} 
                 placeholder={field.placeholder}
                 required={field.required}
-                width= "80%"
+                style = {{ width: "80%" }}
               />
             ))}
-            <PinkButton text="Sign up" width="35%" height="9%" margin="3% 0 0 0"/>
+            <PinkButton text="Sign up" style = {{ width:"35%", height:"9%", margin:"3% 0 0 0"}}/>
             </div>
           </form>
 

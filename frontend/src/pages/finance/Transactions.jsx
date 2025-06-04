@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import API from "../../utils/api";
 import styles from "./Transactions.module.css";
 import nerd from "../../assets/nerd.png";
-
+import { useAuth } from "../../context/AuthContext";
 import DarkBox from "../../components/DarkBox";
 import FormField from "../../components/FormField";
 import PinkButton from "../../components/PinkButton";
@@ -12,6 +12,7 @@ import Message from "../../components/Message";
 export default function Transactions() {
 
   const navigate = useNavigate();
+  const { userInfo, loading } = useAuth()
 
   const [transactions, setTransactions] = useState([]);
   const [error, setError] = useState('');
@@ -21,7 +22,6 @@ export default function Transactions() {
   const [cards, setCards] = useState([]);
   const [banks, setBanks] = useState([]);
   const [thirds, setThirds] = useState([]);
-
   const [formData, setFormData] = useState({
     name: '',
     amount: '',
@@ -35,31 +35,20 @@ export default function Transactions() {
     description: ''
   });
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setError("You need to log in.");
-      return;
-    }
+  const [hiddenTransactions, setHiddenTransactions] = useState([]);
 
-    const check = async () => {
-    const isValid = await verifyToken(token);
-    if (!isValid) {
-      setError("Session expired.");
-      return;
-    }}
+  useEffect(() => {
+    if (!userInfo && !loading) return
 
     fetchTransactions()
     fetchOptions()
-  }, []);
+  }, [userInfo]);
+
 
   const fetchTransactions = async () => {
 
     try {
-      const token = localStorage.getItem("token");
-      const response = await API["finance"].get("/transactions/", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await API["finance"].get("/transactions/");
       setTransactions(response.data);
       setError('');
     } catch (err) {
@@ -73,13 +62,11 @@ export default function Transactions() {
 
   const fetchOptions = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const config = { headers: { Authorization: `Bearer ${token}` } };
       const [catRes, cardRes, bankRes, thirdRes] = await Promise.all([
-        API["finance"].get("/category/", config),
-        API["finance"].get("/card/", config),
-        API["finance"].get("/bank_account/", config),
-        API["finance"].get("/third/", config),
+        API["finance"].get("/category/"),
+        API["finance"].get("/card/"),
+        API["finance"].get("/bank_account/"),
+        API["finance"].get("/third/"),
       ]);
 
       setCategories(catRes.data);
@@ -115,10 +102,7 @@ export default function Transactions() {
     }
 
     try {
-      const token = localStorage.getItem("token");
-      await API["finance"].post("/transactions/", formData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await API["finance"].post("/transactions/", formData);
       setSuccess('Transaction added successfully!');
       setError('');
       setFormData({ name: '', amount: '', transactions_type: '', category: '', date: '', payment_method: '',
@@ -135,37 +119,39 @@ export default function Transactions() {
     }
   };
 
-
-  // controlar itens ocultados
-  const [hiddenTransactions, setHiddenTransactions] = useState([]);
-
   const handleHideTransaction = (id) => {
     setHiddenTransactions(prev => [...prev, id]);
   };
 
-  // lista de histórico
   const handleShowAll = () => {
   setHiddenTransactions([]);
   };
 
   const SIMPLE_FIELDS = [
-    { label: "Name of Transaction", name: "name", type: "text",  placeholder: 'Ex: Market', required: true },
-    { label: "Amount", name: "amount", type: "text",  placeholder: '100.50', required: true },
-    { label: "Transaction Type", name: "transaction_type", type: "text",  placeholder: 'Select a type', required: true },
-    { label: "Description", name: "description", type: "text",  placeholder: 'Optional description' },
-    { label: "Date", name: "date", type: "date",  placeholder: 'Date', required: true },
+    { label: "Name of Transaction", name: "name", type: "text",  placeholder: 'Ex: Market', required: true, style: { width : "95%", gridColumn: "span 2" }},
+    { label: "Description", name: "description", type: "text",  placeholder: 'Optional description', style: { width : "95%", gridColumn: "span 2" }},
+    { label: "Amount", name: "amount", type: "text",  placeholder: '100.50', required: true, style: { width : "90%" }  },
+    { label: "Date", name: "date", type: "date",  placeholder: 'Date', required: true, style: { width : "90%" }  },
   ]
 
   const SELECT_FIELDS = [
-    { label: "Category", name: "category", placeholder: 'Select a category', options : categories },
-    { label: "Card", name: "card", placeholder: 'Select a card', options : cards },
-    { label: "Bank", name: "bank", placeholder: 'Select a bank', options: banks },
+    { label: "Category", name: "category", placeholder: 'Select a category', options : categories, style: { width : "95%", gridColumn: "span 2" }  },
+    { label: "Card", name: "card", placeholder: 'Select a card', options : cards, style: { width : "90%" }  },
+    { label: "Bank", name: "bank", placeholder: 'Select a bank', options: banks, style: { width : "90%" }  },
   ]
 
   const SELECT_BASE_FIELDS = [
-    { label: "Transactions Type", name: "transactions_type", placeholder: "Select a type", required: true, options: [{ value: "income", label: "Income" }, { value: "expense", label: "Expense" }, ] },
-    { label: "Payment Method", name: "payment_method", placeholder: "Select a Payment Method", required: true, options: [{ value: "card", label: "Card" }, { value: "cash", label: "Cash" }, { value: "pix", label: "Pix" }, ],}, 
+    { label: "Transactions Type", name: "transactions_type", placeholder: "Select a type", required: true,
+      options: [{ value: "income", label: "Income" }, { value: "expense", label: "Expense" }, ],
+      style: { width : "90%" } 
+    },
+    { label: "Payment Method", name: "payment_method", placeholder: "Select a Payment Method", required: true,
+      options: [{ value: "card", label: "Card" }, { value: "cash", label: "Cash" }, { value: "pix", label: "Pix" }, ],
+      style: { width : "90%" }
+    }, 
   ];
+
+  if (!userInfo && !loading) return <div className={styles["transactions-page-error"]}><DarkBox style={{ width : '30%', height: '30%', display: 'flex', justifyContent: 'center', alignItems: 'center' }} ><p>Você precisa estar logado.</p></DarkBox></div>
 
   return (
     <div className={styles["transactions-page"]}>
@@ -177,7 +163,7 @@ export default function Transactions() {
         
         <h3 style = {{ fontSize: '2rem', marginBottom: '1rem', textAlign: 'center' }}>Register Your Transactions</h3>
 
-        <form onSubmit={handleSubmit} style={{ width: '90%', height: '75%' }}>
+        <form onSubmit={handleSubmit} style={{ width: '90%', height: '70%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
             <div className={styles['form-container']}>
                 {SIMPLE_FIELDS.map((simple_field) => (
                   <FormField
@@ -189,7 +175,7 @@ export default function Transactions() {
                     onChange={handleChange} 
                     placeholder={simple_field.placeholder}
                     required={simple_field.required}
-                    width= "80%"
+                    style = {simple_field.style}
                   />
                   ))
                 }
@@ -200,7 +186,7 @@ export default function Transactions() {
                     name={field.name}
                     label={field.label}
                     required={field.required}
-                    width="80%"
+                    style = {field.style}
                   >
                     <select
                       name={field.name}
@@ -232,7 +218,8 @@ export default function Transactions() {
                     name={select_field.name}
                     label={select_field.label} 
                     required 
-                    width="80%">
+                    style = {select_field.style}
+                    >
                     <select
                       name={select_field.name}
                       value={formData[select_field.name]}
@@ -240,11 +227,11 @@ export default function Transactions() {
                       required={select_field.required}
                       >
                         <option value="" disabled >
-                          {`Select a ${select_field.placeholder}`}
+                          {`${select_field.placeholder}`}
                         </option>
                         {select_field.options.map((option) => (
                           <option key={option.id} value={option.id}>
-                            {field.getLabel(option)}
+                            {option.name || option.institution.name}
                           </option>
                         ))}
                     </select>
@@ -253,17 +240,23 @@ export default function Transactions() {
                 }
             </div>
 
-          <div className={styles["add-button-container"]}>
-            <PinkButton text="ADD Transaction" width="50%" height="40px" margin="1rem 0" />
-          </div>
+          
+          <PinkButton text="Add Transaction" style={{ width:"50%", height:"8%", marginTop:"3%", gridColumn: "span 2" }} />
+          
         </form>
 
-        {error && <p className={styles.message}>{error}</p>}
-        {success && <p className={styles.message} style={{ color: 'lightgreen' }}>{success}</p>}
+        <p
+          style={{
+            color: error ? 'red' : success ? 'lightgreen' : 'inherit',
+            visibility: error || success ? 'visible' : 'hidden',
+            margin: '2%'
+          }}> {error || success || ''} 
+        </p>
+
       </DarkBox>
 
 
-      <DarkBox style ={{ width : "30%", minwidth : "300px", height : "auto", minheight : "100px" }} >
+      <DarkBox style ={{ width : "30%", minwidth : "300px", height : "90%", minheight : "100px" }} >
         <h2 className={styles.title}>Transactions List</h2>
         <button className={styles["show-all-button"]} onClick={handleShowAll}>
           Show All History
