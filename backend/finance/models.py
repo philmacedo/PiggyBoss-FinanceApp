@@ -1,8 +1,8 @@
 from django.db import models
+from django.contrib.auth.models import User
 from colorfield.fields import ColorField
 from phonenumber_field.modelfields import PhoneNumberField
 from datetime import date
-from account.models import Profile
 
 class Institution(models.Model):
     name = models.CharField(max_length=50, unique=True)
@@ -28,7 +28,7 @@ class Institution(models.Model):
         verbose_name_plural = "Institutions"
 
 class BankAccount(models.Model):
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="bank_accounts")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bank_accounts")
     institution = models.ForeignKey(Institution, on_delete=models.SET_NULL, null=True, blank=True, related_name="bank_accounts")
     account_type = models.CharField(max_length=20, 
         choices=[
@@ -47,7 +47,7 @@ class BankAccount(models.Model):
         verbose_name_plural = "Bank Accounts"
 
 class Card(models.Model):
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='cards')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cards')
     name = models.CharField(max_length=30)
     bank = models.ForeignKey(BankAccount, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -61,7 +61,7 @@ class Card(models.Model):
         verbose_name_plural = "Cards"
 
 class Category(models.Model):
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='category')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='category')
     name = models.CharField(max_length=30, unique=True)
     color = ColorField(default='#FF0000')
     icon = models.ImageField(upload_to='category_images', null=True, blank=True)
@@ -78,7 +78,7 @@ class Category(models.Model):
         return self.name
     
 class Third(models.Model):
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='thirds')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='thirds')
     name = models.CharField(max_length=30)
     related = models.CharField(max_length=30)
     age = models.IntegerField()    
@@ -92,7 +92,7 @@ class Third(models.Model):
         return self.name
 
 class Transactions(models.Model):
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='transactions')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='transactions')
     name = models.CharField(max_length=50)
     transactions_type = models.CharField(max_length=50, choices=[
         ('income', 'Income'),
@@ -100,16 +100,15 @@ class Transactions(models.Model):
         ],
         default='expense')
     amount = models.DecimalField(max_digits=12, decimal_places=2)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, related_name='transactions')
     date = models.DateField(default=date.today)
     payment_method = models.CharField(max_length=50, choices=[
-        ('card', 'Card'),
-        ('cash', 'Cash'),
-        ('pix', 'Pix')
+        ('debit', 'Debit'),
+        ('credit', 'Credit'),
         ])
-    card = models.ForeignKey(Card, on_delete=models.SET_NULL, null=True, blank=True)
-    bank = models.ForeignKey(BankAccount, on_delete=models.SET_NULL, null=True, blank=True)
-    third = models.ForeignKey(Third, on_delete=models.SET_NULL, null=True, blank=True)
+    card = models.ForeignKey(Card, on_delete=models.SET_NULL, null=True, blank=True, related_name='transactions')
+    bank = models.ForeignKey(BankAccount, on_delete=models.SET_NULL, null=True, blank=True, related_name='transactions')
+    third = models.ForeignKey(Third, on_delete=models.SET_NULL, null=True, blank=True, related_name='transactions')
     description = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -121,15 +120,14 @@ class Transactions(models.Model):
         return self.name
     
 class CreditCardBill(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bills')
     card = models.ForeignKey(Card, on_delete=models.CASCADE, related_name='bills')
-    bill_month = models.DateField()
+    bill_date = models.DateField()
     due_date = models.DateField()
-    total_amount = models.DecimalField(max_digits=14, decimal_places=2)
     status = models.CharField(max_length=20, 
         choices=[
         ('paid', 'Paid'),
         ('unpaid', 'Unpaid'),
-        ('overdue', 'Overdue')
         ],
         default='unpaid'
     )
@@ -139,4 +137,4 @@ class CreditCardBill(models.Model):
         verbose_name_plural = "Credit Card Bills"
 
     def __str__(self):
-        return self.bill_month
+        return self.bill_date

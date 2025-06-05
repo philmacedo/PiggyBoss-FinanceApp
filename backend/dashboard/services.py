@@ -5,17 +5,17 @@ from ..finance.models import *
 def get_month_transactions_balance(user, month, year):
     expenses = Transactions.objects.filter(
         user=user,
-        type='expense',
+        transactions_type='expense',
         date__month=month,
         date__year=year
-    ).aggregate(total=Sum('value'))['total']
+    ).aggregate(total=Sum('amount'))['total']
 
     incomes = Transactions.objects.filter(
         user=user,
-        type='income',
+        transactions_type='income',
         date__month=month,
         date__year=year
-    ).aggregate(total=Sum('value'))['total']
+    ).aggregate(total=Sum('amount'))['total']
 
     return (expenses + incomes)
 
@@ -77,9 +77,9 @@ def get_month_bill_total(user, card = None, month = None, year = None):
     bills = CreditCardBill.objects.filter(user=user)
 
     if month:
-        bills = bills.filter(bill_month=month)
+        bills = bills.filter(bill_date__month=month)
     if year:
-        bills = bills.filter(bill_year=year)
+        bills = bills.filter(bill_date__year=year)
     if card:
         bills = bills.filter(card=card)
         
