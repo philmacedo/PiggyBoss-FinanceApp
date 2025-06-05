@@ -1,12 +1,11 @@
 from rest_framework import serializers
-from rest_framework.permissions import IsAuthenticated
 from .models import *
 
 class BankAccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = BankAccount
         fields = "__all__"
-        read_only_fields = ['profile']
+        read_only_fields = ['user']
         depth = 1
         
     account_type = serializers.ChoiceField(
@@ -23,24 +22,24 @@ class BankAccountSerializer(serializers.ModelSerializer):
     )
 
     def create(self, validated_data):
-        validated_data['profile'] = self.context['request'].user.profile
+        validated_data['user'] = self.context['request'].user
         return super().create(validated_data)
 
 class CardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Card
         fields = "__all__"
-        read_only_fields = ['profile']
+        read_only_fields = ['user']
     
     def create(self, validated_data):
-        validated_data['profile'] = self.context['request'].user.profile
+        validated_data['user'] = self.context['request'].user
         return super().create(validated_data)
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = "__all__"
-        read_only_fields = ['profile']
+        read_only_fields = ['user']
 
     balance_type = serializers.ChoiceField(
         choices = [
@@ -53,24 +52,24 @@ class CategorySerializer(serializers.ModelSerializer):
     )
 
     def create(self, validated_data):
-        validated_data['profile'] = self.context['request'].user.profile
+        validated_data['user'] = self.context['request'].user
         return super().create(validated_data)
 
 class ThirdSerializer(serializers.ModelSerializer):
     class Meta:
         model = Third
         fields = "__all__"
-        read_only_fields = ['profile']
+        read_only_fields = ['user']
 
     def create(self, validated_data):
-        validated_data['profile'] = self.context['request'].user.profile
+        validated_data['user'] = self.context['request'].user
         return super().create(validated_data)
     
 class TransactionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transactions
         fields = "__all__"
-        read_only_fields = ['profile']
+        read_only_fields = ['user']
 
     transactions_type = serializers.ChoiceField(
         choices = [
@@ -95,15 +94,15 @@ class TransactionsSerializer(serializers.ModelSerializer):
     )
 
     def create(self, validated_data):
-        validated_data['profile'] = self.context['request'].user.profile
+        validated_data['user'] = self.context['request'].user
         return super().create(validated_data)
 
 class CreditCardBillSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreditCardBill
         fields = "__all__"
-        read_only_fields = ['profile', 'status']
+        read_only_fields = ['user', 'status']
 
     def create(self, validated_data):
-        validated_data['profile'] = self.context['request'].user.profile
+        validated_data['user'] = self.context['request'].user
         return super().create(validated_data)
