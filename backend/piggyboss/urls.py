@@ -22,5 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('account/', include('account.urls')),
     path('finance/', include('finance.urls')),
+    path('dashboard/', include('dashboard.urls')),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
 ]

@@ -118,7 +118,9 @@ class Transactions(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+
+# refatorar para que as transações aponte para uma bill
 class CreditCardBill(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bills')
     card = models.ForeignKey(Card, on_delete=models.CASCADE, related_name='bills')

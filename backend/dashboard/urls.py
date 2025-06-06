@@ -2,8 +2,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('api/month-balance/', views.month_transactions_balance, name='month-balance'),
-    path('api/expenses-by-category/', views.expenses_by_category, name='expenses-by-category'),
-    path('api/category-expenses-distribution/', views.category_expenses_distribution, name='category-expenses-distribution'),
-    path('api/month-bill-total/', views.month_bill_total, name='month-bill-total'),
-]
+    path('month-balance/', views.MonthBalanceView.as_view(), name='month-balance'),
+    path('expenses-by-category/', views.ExpensesByCategoryView.as_view(), name='expenses-by-category'),
+    path('category-expenses-distribution/', views.CategoryExpensesDistributionView.as_view(), name='category-expenses-distribution'),
+    path('month-bill-total/', views.MonthBillTotalView.as_view(), name='month-bill-total'),
+    ]

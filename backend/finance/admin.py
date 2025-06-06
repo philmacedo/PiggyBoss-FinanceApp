@@ -39,7 +39,7 @@ class ThirdAdmin(admin.ModelAdmin):
 
 @admin.register(Transactions)
 class TransactionsAdmin(admin.ModelAdmin):
-    list_display = ('name', 'amount', 'date', 'payment_method', 'user')
+    list_display = ('name', 'amount', 'date', 'payment_method', 'user', 'category')
     list_filter = ('payment_method', 'date', 'category')
     search_fields = ('name', 'description')
 

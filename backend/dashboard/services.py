@@ -1,6 +1,5 @@
-from ..account.models import Profile
 from django.db.models import Sum
-from ..finance.models import *
+from finance.models import *
 
 def get_month_transactions_balance(user, month, year):
     expenses = Transactions.objects.filter(
@@ -8,61 +7,65 @@ def get_month_transactions_balance(user, month, year):
         transactions_type='expense',
         date__month=month,
         date__year=year
-    ).aggregate(total=Sum('amount'))['total']
+    ).aggregate(total=Sum('amount'))['total'] or 0
 
     incomes = Transactions.objects.filter(
         user=user,
         transactions_type='income',
         date__month=month,
         date__year=year
-    ).aggregate(total=Sum('amount'))['total']
+    ).aggregate(total=Sum('amount'))['total'] or 0
 
-    return (expenses + incomes)
+    return (incomes - expenses)
 
 def get_expenses_by_category( user, category, card = None, month = None, year = None ):
     category = Category.objects.get(user = user , name = category)
+    transactions = category.transactions.all()
 
     if card:
-        transactions = category.transactions.filter(
+        transactions = transactions.filter(
             card = card,
         )
 
     if month:
-        transactions = category.transactions.filter(
+        transactions = transactions.filter(
             date__month = month,
         )
 
     if year:
-        transactions = category.transactions.filter(
+        transactions = transactions.filter(
             date__year = year,
         )
 
     return transactions
 
 def get_category_expenses_distribution(user, card = None, month = None, year = None):
+    transactions = Transactions.objects.filter(
+        user=user,
+        transactions_type='expense',
+        )
+
     if card:
-        queryset = Transactions.objects.filter(
-        user=user,
-        type='expense',
-        card=card,
-        date__month=month,
-        date__year=year,
-        ).values('category__name').annotate(total=Sum('value'))
+        transactions = transactions.filter(
+            card=card
+        )
 
-        total_expenses = sum(item['total'] for item in queryset)
+    if month:
+        transactions = transactions.filter(
+            date__month=month
+        )
 
-    else:
-        queryset = Transactions.objects.filter(
-        user=user,
-        type='expense',
-        date__month=month,
-        date__year=year,
-        ).values('category__name').annotate(total=Sum('value'))
+    if year:
+        transactions = transactions.filter(
+            date__year=year
+        )
 
-        total_expenses = sum(item['total'] for item in queryset)
+
+    transactions = transactions.values('category__name').annotate(total=Sum('amount'))
+    total_expenses = sum(item['total'] for item in transactions)
 
     result = []
-    for item in queryset:
+    for item in transactions:
         percent = (item['total'] / total_expenses * 100) if total_expenses > 0 else 0
         result.append({
             'category': item['category__name'],
@@ -73,19 +76,25 @@ def get_category_expenses_distribution(user, card = None, month = None, year = N
     return result
                                           
 
-def get_month_bill_total(user, card = None, month = None, year = None):
-    bills = CreditCardBill.objects.filter(user=user)
+def get_month_bill_total(user, month=None, year=None):
+    transactions = Transactions.objects.filter(
+        user=user,
+        transactions_type='expense',
+        payment_method='credit',
+    )
 
     if month:
-        bills = bills.filter(bill_date__month=month)
+        transactions = transactions.filter(date__month=month)
     if year:
-        bills = bills.filter(bill_date__year=year)
-    if card:
-        bills = bills.filter(card=card)
-        
-    bills = bills.annotate(total=Sum('transactions__amount'))
+        transactions = transactions.filter(date__year=year)
 
-    return bills
+    totals = (
+        transactions.values('card__name')
+        .annotate(total=Sum('amount'))
+        .order_by('card__name')
+    )
+
+    return totals
 
 
 

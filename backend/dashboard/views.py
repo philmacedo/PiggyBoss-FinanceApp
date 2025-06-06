@@ -1,118 +1,76 @@
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.db.models import Sum
-from .models import Transactions, Category, CreditCardBill
+from rest_framework.permissions import IsAuthenticated
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def month_transactions_balance(request):
-    user = request.user
-    month = request.query_params.get('month')
-    year = request.query_params.get('year')
+from .services import (
+    get_month_transactions_balance,
+    get_expenses_by_category,
+    get_category_expenses_distribution,
+    get_month_bill_total
+)
 
-    expenses = Transactions.objects.filter(
-        user=user,
-        type='expense',
-        date__month=month,
-        date__year=year
-    ).aggregate(total=Sum('value'))['total'] or 0
+class MonthBalanceView(APIView):
+    permission_classes = [IsAuthenticated]
 
-    incomes = Transactions.objects.filter(
-        user=user,
-        type='income',
-        date__month=month,
-        date__year=year
-    ).aggregate(total=Sum('value'))['total'] or 0
+    def get(self, request):
+        month = int(request.query_params.get('month'))
+        year = int(request.query_params.get('year'))
 
-    balance = incomes + expenses
-    return Response({'balance': balance})
+        total = get_month_transactions_balance(request.user, month, year)
+        return Response({'balance': total})
 
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def expenses_by_category(request):
-    user = request.user
-    category_name = request.query_params.get('category')
-    card = request.query_params.get('card')
-    month = request.query_params.get('month')
-    year = request.query_params.get('year')
+class ExpensesByCategoryView(APIView):
+    permission_classes = [IsAuthenticated]
 
-    try:
-        category = Category.objects.get(user=user, name=category_name)
-    except Category.DoesNotExist:
-        return Response({'error': 'Category not found'}, status=404)
+    def get(self, request):
+        category = request.query_params.get('category')
+        card = request.query_params.get('card')
+        month = request.query_params.get('month')
+        year = request.query_params.get('year')
 
-    transactions = category.transactions.filter()
-    if card:
-        transactions = transactions.filter(card=card)
-    if month:
-        transactions = transactions.filter(date__month=month)
-    if year:
-        transactions = transactions.filter(date__year=year)
-
-    data = [{'id': t.id, 'value': t.value, 'date': t.date} for t in transactions]
-    return Response(data)
+        transactions = get_expenses_by_category(
+            user=request.user,
+            category=category,
+            card=card,
+            month=int(month) if month else None,
+            year=int(year) if year else None
+        )
+        data = [
+            {'id': t.id, 'amount': t.amount, 'date': t.date, 'description': t.description}
+            for t in transactions
+        ]
+        return Response(data)
 
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def category_expenses_distribution(request):
-    user = request.user
-    card = request.query_params.get('card')
-    month = request.query_params.get('month')
-    year = request.query_params.get('year')
+class CategoryExpensesDistributionView(APIView):
+    permission_classes = [IsAuthenticated]
 
-    filters = {
-        'user': user,
-        'type': 'expense'
-    }
-    if card:
-        filters['card'] = card
-    if month:
-        filters['date__month'] = month
-    if year:
-        filters['date__year'] = year
+    def get(self, request):
+        card = request.query_params.get('card')
+        month = request.query_params.get('month')
+        year = request.query_params.get('year')
 
-    queryset = Transactions.objects.filter(**filters).values('category__name').annotate(total=Sum('value'))
-    total_expenses = sum(item['total'] for item in queryset)
-
-    result = []
-    for item in queryset:
-        percent = (item['total'] / total_expenses * 100) if total_expenses > 0 else 0
-        result.append({
-            'category': item['category__name'],
-            'total': item['total'],
-            'percent': round(percent, 2),
-        })
-    return Response(result)
+        data = get_category_expenses_distribution(
+            user=request.user,
+            card=card,
+            month=month,
+            year=year
+        )
+        return Response(data)
 
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def month_bill_total(request):
-    user = request.user
-    card = request.query_params.get('card')
-    month = request.query_params.get('month')
-    year = request.query_params.get('year')
+class MonthBillTotalView(APIView):
+    permission_classes = [IsAuthenticated]
 
-    bills = CreditCardBill.objects.filter(user=user)
-    if month:
-        bills = bills.filter(bill_month=month)
-    if year:
-        bills = bills.filter(bill_year=year)
-    if card:
-        bills = bills.filter(card=card)
+    def get(self, request):
+        month = request.query_params.get('month')
+        year = request.query_params.get('year')
 
-    bills = bills.annotate(total=Sum('transactions__amount'))
-    data = []
-    for bill in bills:
-        data.append({
-            'id': bill.id,
-            'card': bill.card.id,
-            'bill_month': bill.bill_month,
-            'bill_year': bill.bill_year,
-            'total': bill.total or 0,
-        })
-
-    return Response(data)
+        total = get_month_bill_total(
+            user=request.user,
+            month=int(month) if month else None,
+            year=int(year) if year else None
+        )
+        
+        return Response(total)
