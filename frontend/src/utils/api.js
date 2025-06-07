@@ -85,6 +85,7 @@ const createAPI = (baseURL) => {
 const API = {
   account: axios.create({baseURL: 'http://localhost:8000/account'}),
   finance: createAPI('http://localhost:8000/finance'),
-} 
+  dashboard: createAPI('http://localhost:8000/dashboard'),
+}
 
 export default API;

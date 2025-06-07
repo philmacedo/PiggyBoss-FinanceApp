@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -11,11 +11,20 @@ import {
 
 export default function SelectButton({label, options, width, height}) {
 
-  if(!options || options.length === 0) {
-    options = ['option1']
-  }
+  const [option, setOption] = useState("");
 
-  const [option, setOption] = useState(options[0]);
+  useEffect(() => {
+    if(!options || options.length === 0) {
+      console.log(options)
+      options = [label]
+
+      setOption(label)
+    }
+    else {
+      setOption(options[0])
+    }
+        
+  }, [options]);
 
   const handleChange = (event) => {
     setOption(event.target.value);
@@ -26,7 +35,7 @@ export default function SelectButton({label, options, width, height}) {
         <InputLabel id="select-label" sx={{ color: '#f5f5f5', padding: '0 10%' }}>{label}</InputLabel>
         <Select
           labelId="select-label"
-          value={option}
+          value={options.includes(option) ? option : ""}
           label={label}
           onChange={handleChange}
           MenuProps={{

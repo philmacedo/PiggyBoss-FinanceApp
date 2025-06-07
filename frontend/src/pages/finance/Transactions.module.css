@@ -16,13 +16,6 @@ body {
   flex-wrap: wrap;
 }
 
-.transactions-page-error {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 95%;
-}
-
 .form-container {
   height: 90%;
   width: 100%;

@@ -11,35 +11,18 @@ import {
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const data = {
-  labels: ['Market', 'Uber', 'Restaurant', 'Clothes', 'Food', 'Food', 'Food', 'Food', 'Food', 'Food', 'Food', 'Food', 'Food', 'Food', 'Food'],
-  datasets: [
-    {
-      label: 'Credit',
-      data: [500, 800, 650, 700, 900 ,500, 800, 650, 700, 900, 500, 800, 650, 700, 900],
-      backgroundColor: '#FF66C4',
-    },
-    {
-      label: 'Debit',
-      data: [650, 700, 900, 500, 800, 650, 700, 900, 500, 800, 650, 700, 900 ,500, 800 ],
-      backgroundColor: '#710d9b',
-    }
-  ],
-};
-
 const options = {
   responsive: true,
   plugins: {
     legend: {
-      position: 'bottom',
+      display: false,
     },
     title: {
       display: false,
-      text: 'Gastos Mensais',
     },
   },
 };
 
-export default function BarGraph({ style }) {
+export default function BarGraph({ style, data }) {
   return <Bar data={data} options={options}/>;
 }

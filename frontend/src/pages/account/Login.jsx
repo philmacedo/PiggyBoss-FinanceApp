@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Account.module.css"
-import API from "../../utils/api";
 import logo from "../../assets/logo.png";
 import FormField from "../../components/FormField";
 import PinkButton from "../../components/PinkButton";
@@ -45,7 +44,6 @@ export default function Login() {
       await login(formData)
       navigate('/dashboard')
     } catch (err) {
-      console.log(err.response?.data)
       if (err.response?.data){
         setError(Object.values(err.response.data).flat().join(' '))
       } else {

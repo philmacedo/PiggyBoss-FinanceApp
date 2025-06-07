@@ -8,7 +8,7 @@ nav {
 }
 
 .logo {
-  height: 50px; /* ou outro tamanho que desejar */
+  height: 50px;
   margin-right: 0.5rem;
   margin-top: 0.5rem;
 }
@@ -31,8 +31,8 @@ nav {
     height: 100%;
 }
 
-.left-side p {
-    margin: 0% 2%;
+.left-side a {
+    margin: 0% 1%;
     color: white;
     transition: color 0.3s ease;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.5); /*Sombra atrás do texto */

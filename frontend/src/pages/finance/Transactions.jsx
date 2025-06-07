@@ -8,6 +8,7 @@ import DarkBox from "../../components/DarkBox";
 import FormField from "../../components/FormField";
 import PinkButton from "../../components/PinkButton";
 import Message from "../../components/Message";
+import NeedLogin from "../../components/NeedLogin";
 
 export default function Transactions() {
 
@@ -151,7 +152,8 @@ export default function Transactions() {
     }, 
   ];
 
-  if (!userInfo && !loading) return <div className={styles["transactions-page-error"]}><DarkBox style={{ width : '30%', height: '30%', display: 'flex', justifyContent: 'center', alignItems: 'center' }} ><p>Você precisa estar logado.</p></DarkBox></div>
+  if (!userInfo && !loading) return <NeedLogin />
+  else if (loading) return <></>
 
   return (
     <div className={styles["transactions-page"]}>
