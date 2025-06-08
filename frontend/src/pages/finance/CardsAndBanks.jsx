@@ -1,15 +1,21 @@
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import API from "../../utils/api";
-import styles from "./Transactions.module.css";
-import nerd from "../../assets/nerd.png";
-import { useAuth } from "../../context/AuthContext";
+import styles from "./CardsAndBanks.module.css"
+import SelectBox from "../../components/cardsandbanks/SelectBox";
 import DarkBox from "../../components/DarkBox";
-import FormField from "../../components/FormField";
-import PinkButton from "../../components/PinkButton";
-import Message from "../../components/Message";
-import NeedLogin from "../../components/NeedLogin";
 
-export default function CardsAndBanks() {
-  return <div></div>
+export default function CardsAndBanks(){
+
+    const CARDS_AND_BANKS = (
+        <div className={styles["cardsandbanks"]}>
+            <div className={styles["sidebar"]}>
+                <SelectBox label="Banks"  cardstyle={{ width : "70%", height: "30%" }}/>
+                <SelectBox label="Cards" cardstyle={{ width : "70%", height: "30%" }}/>
+                <SelectBox label="Categories" cardstyle={{ width : "70%", height: "30%" }}/>
+            </div>
+            <div className={styles["content"]}>
+                <DarkBox style={{ height : "90%" , width : "90%" }}/>
+            </div>
+        </div>
+    )
+
+    return CARDS_AND_BANKS;
 }
