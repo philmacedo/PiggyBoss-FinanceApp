@@ -1,5 +1,15 @@
 import API from "../utils/api"
 
+export const fetchTransactions = async () => {
+
+    try {
+        const response = await API["finance"].get("/transactions/");
+        return response.data
+    } catch (err) {
+        return (Object.values(err.response.data).flat().join(' '))
+    } 
+}
+
 export const fetchCards = async () => {
     try {
         const { data } = await API['finance'].get('/card')

@@ -19,3 +19,19 @@
 .list:hover {
   scrollbar-color: #f1109b transparent;
 }
+
+.title-button-label  {
+  background-color: transparent;
+  color: white;
+  font-weight: bold;
+  font-size: 1.2rem;
+  border: 1px solid transparent;
+  padding: 4px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.title-button-label :hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}

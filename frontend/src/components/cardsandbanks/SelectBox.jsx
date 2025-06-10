@@ -2,9 +2,8 @@ import { Card, CardContent, Typography, List, ListItemButton, ListItemText } fro
 import { useState } from 'react';
 import styles from "./SelectBox.module.css"
 
-export default function SelectBox({ label, options, cardstyle, itemstyle }) {
+export default function SelectBox({ label, options, titlebuttonlabel, titlebuttoncallback, cardstyle, itemstyle }) {
   const [selected, setSelected] = useState(0);
-  const optionsdefault = ['Cartão de Crédito', 'Cartão de Débito', 'Cartão Pré-pago', 'Cartão de Crédito', 'Cartão de Débito', 'Cartão Pré-pago'];
 
   return (
     <Card
@@ -15,13 +14,24 @@ export default function SelectBox({ label, options, cardstyle, itemstyle }) {
         ...cardstyle
       }}>
       <CardContent style={{ height: "100%"}}>
-        <Typography variant="h6" gutterBottom style={{ height: "10%" }}> 
+        <Typography variant="h6" gutterBottom 
+          style ={{
+            marginBottom: "20px", 
+            display: "flex",
+            justifyContent: "space-between",
+            alignItemsc: "center"
+          }}
+        > 
           {label}
-
-          
+          <button
+            onClick={titlebuttoncallback}
+            className={styles["title-button-label"]}
+          >
+            {titlebuttonlabel}
+          </button>
         </Typography>
         <div className = {styles["list"]}>
-          {optionsdefault.map((option, index) => (
+          {options.map((option, index) => (
                 <ListItemButton
                 key={index}
                 selected={selected === index}
@@ -29,10 +39,10 @@ export default function SelectBox({ label, options, cardstyle, itemstyle }) {
                 sx={{
                   borderRadius: "10px",
                   '&:hover': {
-                    backgroundColor: '#710d9b',
+                    backgroundColor: '#f1109b',
                   },
                   '&.Mui-selected': {
-                    backgroundColor: '#710d9b',
+                    backgroundColor: '#f1109b',
                   },
                   marginTop : "2%"
                 }}
