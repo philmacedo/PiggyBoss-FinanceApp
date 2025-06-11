@@ -132,7 +132,7 @@ export default function Transactions() {
 
   return (
     <div className={styles["transactions-page"]}>
-      <DarkBox style = {{ width : "30%", minwidth : "300px", height : "90%" }}>
+      <DarkBox style = {{ width : "30%", height : "90%", minWidth : "300px", minHeight: "800px" }}>
 
         <div style={{margin: '5% 0 0 0' }}> 
             <img src={nerd} alt="Logo" className={styles['logo']} />

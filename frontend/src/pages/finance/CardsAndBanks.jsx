@@ -1,6 +1,8 @@
 import styles from "./CardsAndBanks.module.css"
 import SelectBox from "../../components/cardsandbanks/SelectBox";
 import DarkBox from "../../components/DarkBox";
+import BankForm from "../../components/cardsandbanks/BankForm";
+import CardForm from "../../components/cardsandbanks/CardForm";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext"
 import API from "../../utils/api";
@@ -16,37 +18,30 @@ export default function CardsAndBanks(){
 
     useEffect(() => {
         if (!userInfo && !loading) return 
-        console.log("oooi")
+
         fetchOptions()
     }, [userInfo, loading])
 
     const fetchOptions = async () => {
         try {
-            console.log("oooioooiiioo")
             const [catRes, cardRes, bankRes] = await Promise.all([
                 API["finance"].get("/category/"),
                 API["finance"].get("/card/"),
                 API["finance"].get("/bank_account/"),
             ]);
 
-            console.log(cardRes.data)
-            console.log("oooiooo")
             setCategories(catRes.data)
             setCards(cardRes.data)
             setBanks(bankRes.data)
 
         } catch (err) {
             if (err.response?.status === 401) {
-                console.log("oi")
-                setError("Session Expired.");
+                console.log("Session Expired.");
             } else if (err.response?.data) {
-                console.log("oi")
-                setError(Object.values(err.response.data).flat().join(' '));
+                console.log(Object.values(err.response.data).flat().join(' '));
             }
         }
     }
-
-    console.log(banks)
 
     const CARDS_AND_BANKS = (
         <div className={styles["cardsandbanks"]}>
@@ -75,7 +70,10 @@ export default function CardsAndBanks(){
 
             </div>
             <div className={styles["content"]}>
-                <DarkBox style={{ height : "90%" , width : "90%" }}/>
+                
+                    {/* <BankForm/>  */}
+                    <CardForm />
+                
             </div>
         </div>
     )

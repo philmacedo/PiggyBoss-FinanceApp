@@ -3,7 +3,7 @@ import styles from './DarkBox.module.css';
 import { Link } from "react-router-dom";
 
 export default function DarkBox({ children, to, style }){
-    const customstyle = {
+    const CUSTOM_STYLE = {
         backgroundColor: "#16102f",
         width : "100%",
         height : "100%",
@@ -15,7 +15,7 @@ export default function DarkBox({ children, to, style }){
 
     const Tag = to ? Link : 'div'
 
-    const darkbox = <Tag to={to} className={styles['dark-box']} style={{...customstyle }}>
+    const darkbox = <Tag to={to} className={styles['dark-box']} style={{...CUSTOM_STYLE }}>
         {children}
     </Tag>
 

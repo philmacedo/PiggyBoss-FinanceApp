@@ -1,6 +1,12 @@
 from rest_framework import serializers
 from .models import *
 
+class InstitutionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Institution
+        fields = "__all__"
+        read_only_fields = ['name','code','institution_type','active','created_at']
+
 class BankAccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = BankAccount
