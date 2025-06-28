@@ -44,22 +44,13 @@ export default function BudgetsOverview() {
           </DarkBox>
         ))}
       </div>
-
-      <div
-        style={{
-          margin: "5%",
-          width: "85%",
-          height: "10%",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center"
-        }}
-      >
+      
+      <div style = {{ margin: '5%', width: '85%', height: '10%', display: 'flex', justifyContent : 'space-between', alignItems : 'center' }}>
         <p>Total</p>
         <p>R$ {totalSpent.toFixed(2)} / {totalBudgetsLimit.toFixed(2)}</p>
       </div>
     </DarkBox>
-  );
+  )
 
   return BUDGETS_OVERVIEW;
 }

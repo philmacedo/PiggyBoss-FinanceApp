@@ -98,3 +98,13 @@ export const fetchMonthlyBudgets = async (params) => {
         return [];
     }
 };
+
+export const deleteBudget = async (id) => {
+  try {
+    const { data } = await API['planning'].delete(`/budget/${id}/`);
+    return data;
+  } catch (err) {
+    console.error("Failed to delete budget", err);
+    return null;
+  }
+};

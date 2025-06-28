@@ -114,7 +114,21 @@ body {
 }
 
 .hide-button:hover {
-  background: #E03B3B;
+  background: #6e45e2;
+}
+
+.delete-button {
+  padding: 0.25rem 0.5rem;
+  background: #FF4C4C;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.delete-button:hover {
+  background: #6e45e2;
 }
 
 

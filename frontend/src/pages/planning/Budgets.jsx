@@ -120,6 +120,17 @@ export default function Budgets() {
         setHiddenBudgets([]);
     };
 
+    const handleDeleteBudget = async (id) => {
+        if (!window.confirm("Are you sure you want to delete this budget?")) return;
+
+        try {
+            await API["planning"].delete(`/budget/${id}/`);
+            setBudgets(budgets.filter((b) => b.id !== id));
+        } catch (err) {
+            console.error("Failed to delete budget", err);
+        }
+    };
+
     if (!userInfo && !loading) return <NeedLogin />;
     if (loading) return null;
 
@@ -253,6 +264,10 @@ export default function Budgets() {
                                 <span>{budget.month}/{budget.year} • </span>
                                 <button className={styles["hide-button"]} onClick={() => handleHideBudgets(budget.id)}>
                                     Hide
+                                </button>
+                                <span> • </span>
+                                <button className={styles["delete-button"]} onClick={() => handleDeleteBudget(budget.id)}>
+                                    Delete
                                 </button>
                             </li>
                         );
