@@ -9,6 +9,10 @@ import CardsAndBanks from './pages/finance/CardsAndBanks.jsx';
 import ForgotPassword from "./pages/account/ForgotPassword";
 import Transactions from './pages/finance/Transactions.jsx';
 
+import { AuthProvider } from './context/AuthContext';
+import CardsAndBanks from './pages/finance/CardsAndBanks.jsx';
+import Budgets from './pages/planning/Budgets.jsx';
+
 export default function App() {
   return (
     <Router>
@@ -21,6 +25,7 @@ export default function App() {
           <Route path="/cardsandbanks" element={<CardsAndBanks />} />
           <Route path="/transactions" element={<Transactions />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/budgets" element={<Budgets />} />
       </Routes>
       </AuthProvider>
     </Router>
