@@ -173,7 +173,7 @@ export default function Budgets() {
                             type="number"
                             value={formData.year}
                             onChange={handleChange}
-                            placeholder="Ex: 2024"
+                            placeholder="Ex: 2025"
                             required
                             style={{ width: "90%" }}
                         />
