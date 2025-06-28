@@ -1,7 +1,9 @@
 from rest_framework import serializers
 from .models import *
+from finance.serializers import CategorySerializer
 
 class BudgetSerializer(serializers.ModelSerializer):
+    category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
     class Meta:
         model = Budget
         fields = "__all__"
