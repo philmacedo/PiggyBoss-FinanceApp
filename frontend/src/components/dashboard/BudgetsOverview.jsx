@@ -1,45 +1,65 @@
-import DarkBox from "../DarkBox"
-import styles from './Dashboard.module.css'
+import * as dashboardServices from "../../services/dashboardServices";
+import { useEffect, useState } from "react";
+import DarkBox from "../DarkBox";
+import styles from "./Dashboard.module.css";
 
-const budgets = [
-    {
-        budget : "Food",
-        current : 100,
-        total : 1000,
-    },
-    {
-        budget : "Market",
-        current : 100,
-        total : 1000,
-    },
-    {
-        budget : "Shop",
-        current : 100,
-        total : 1000,
-    },
-]
+export default function BudgetsOverview() {
+  const [budgets, setBudgets] = useState([]);
+  const [totalBudgetsLimit, setTotalBudgetsLimit] = useState(0);
+  const [totalSpent, setTotalSpent] = useState(0);
 
-export default function BudgetsOverview({}) {
+  const today = new Date();
+  const month = today.getMonth() + 1;
+  const year = today.getFullYear();
 
-    const BUDGETS_OVERVIEW = (
-        <DarkBox style = {{ width : "45%", height : "90%", minwidth : "300px", background : "#0f0b1f"}}>
-        
-            <div className={styles["dashboard-head"]}>
-                <h4>Budgets</h4>
-            </div>
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-            <div className={styles["dashboard-content-invoices"]}>
-                {
-                    budgets.forEach(element => {
-                        <DarkBox to="/login" style = {{  width:"90%", height : "25%", background : "#16102f", flexDirection:"row", justifyContent : 'space-between', alignItems : 'center', padding : '5%' }}>
-                            <p>{element.budget}</p>
-                            <p>R$ {element.current} / {element.total}</p>
-                        </DarkBox> 
-                    })
-                }             
-            </div>
-        </DarkBox>
-    )
-    
-    return BUDGETS_OVERVIEW
+  const fetchData = async () => {
+    const fetchedBudgets = await dashboardServices.fetchMonthlyBudgets({ month, year });
+
+    if (fetchedBudgets) {
+      setBudgets(fetchedBudgets);
+      
+      const spentSum = fetchedBudgets.reduce((acc, curr) => acc + curr.spent, 0);
+      const totalLimit = fetchedBudgets.reduce((acc, curr) => acc + parseFloat(curr.limit_value), 0);
+      setTotalSpent(spentSum);
+      setTotalBudgetsLimit(totalLimit);
+    }
+  };
+
+  const BUDGETS_OVERVIEW = (
+    <DarkBox style={{ width: "45%", height: "90%", minWidth: "300px", background: "#0f0b1f" }}>
+      <div className={styles["dashboard-head"]}>
+        <h4>Budgets</h4>
+      </div>
+
+      <div className={styles["dashboard-content-invoices"]}>
+        {budgets.map((element, index) => (
+          <DarkBox key = {index} to="/login" style = {{  width:"90%", height : "25%", background : "#16102f", flexDirection:"row", justifyContent : 'space-between', alignItems : 'center', padding : '5%' }}>
+            
+            <p>{element.category_name}</p>
+            <p>R$ {parseFloat(element.spent).toFixed(2)} / {parseFloat(element.limit_value).toFixed(2)}</p>
+          </DarkBox>
+        ))}
+      </div>
+
+      <div
+        style={{
+          margin: "5%",
+          width: "85%",
+          height: "10%",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center"
+        }}
+      >
+        <p>Total</p>
+        <p>R$ {totalSpent.toFixed(2)} / {totalBudgetsLimit.toFixed(2)}</p>
+      </div>
+    </DarkBox>
+  );
+
+  return BUDGETS_OVERVIEW;
 }
