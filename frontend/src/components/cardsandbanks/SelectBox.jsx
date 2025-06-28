@@ -2,7 +2,7 @@ import { Card, CardContent, Typography, List, ListItemButton, ListItemText } fro
 import { useState } from 'react';
 import styles from "./SelectBox.module.css"
 
-export default function SelectBox({ label, options, titlebuttonlabel, titlebuttoncallback, cardstyle, itemstyle }) {
+export default function SelectBox({ label, options, titlebuttonlabel, titlebuttoncallback, selectcallback, cardstyle, itemstyle }) {
   const [selected, setSelected] = useState(0);
 
   return (
@@ -35,7 +35,7 @@ export default function SelectBox({ label, options, titlebuttonlabel, titlebutto
                 <ListItemButton
                 key={index}
                 selected={selected === index}
-                onClick={() => setSelected(index)}
+                onClick={() => {setSelected(index); selectcallback(option)} }
                 sx={{
                   borderRadius: "10px",
                   '&:hover': {

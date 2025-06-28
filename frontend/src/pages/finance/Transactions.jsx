@@ -10,6 +10,7 @@ import PinkButton from "../../components/PinkButton"
 import TransactionsView from "../../components/finance/TransactionsView"
 import Message from "../../components/Message"
 import NeedLogin from "../../components/NeedLogin"
+import { fetchTransactions } from "../../services/financeServices"
 
 export default function Transactions() {
 
@@ -233,7 +234,7 @@ export default function Transactions() {
       </DarkBox>
 
 
-      <DarkBox style ={{ width : "30%", minwidth : "300px", height : "90%", minheight : "100px" }} >
+      <DarkBox style ={{ width : "50%", minwidth : "300px", height : "90%", minheight : "100px" }} >
         <TransactionsView />
       </DarkBox>
 

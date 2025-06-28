@@ -6,23 +6,23 @@ import API from "../../utils/api";
 import Image from "../Image";
 import logo from "../../assets/nerd.png";
 import { useAuth } from "../../context/AuthContext"
+import { fetchInstitution } from "../../services/financeServices";
 
 export default function BankForm( styles ){
 
     const { userInfo, loading } = useAuth()
     const [institutions, setInstitutions] = useState([])
-    const accountTypeOptions = ["checking", "savings", "investment", "joint"]
+    const account_typeOptions = ["checking", "savings", "investment", "joint"]
     const [formData, setFormData] = useState({
         institution: '',
-        accountType: '',
+        account_type: '',
     })
 
     const fetchData = async () => {
         try {
-            const getInstitutions = await API["finance"].get("institution")
-            console.log(getInstitutions.data)
-
-            setInstitutions(getInstitutions.data)
+            const getInstitutions = await fetchInstitution()
+            // console.log(getInstitutions)
+            setInstitutions(getInstitutions)
         } catch (err) {
             console.log(err)
         }
@@ -44,7 +44,7 @@ export default function BankForm( styles ){
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const requiredFields = ['institution', 'accountType'];
+        const requiredFields = ['institution', 'account_type'];
         const isValid = requiredFields.every(field => formData[field].trim() !== '');
         if (!isValid) {
             return;
@@ -52,27 +52,25 @@ export default function BankForm( styles ){
 
         try {
             await API["finance"].post("/bank_account/", formData);
-            setFormData({ institution: '', accountType: '',});
+            setFormData({ institution: '', account_type: '',});
         } catch (err) {
             if (err.response?.data){
                 console.log(Object.values(err.response.data).flat().join(' '));
             } else{
                 console.log('Error adding bank_account');
             }
-        
-            setSuccess('');
         }
     };
 
     const BANK_FORM = (
             <DarkBox 
                 style = {{ 
-                    height : "70%", 
+                    height : "55%", 
                     width : "40%",
                     maxHeight: "600px",
                     display : "flex",
                     flexDirection : "column",
-                    justifyContent : "space-around",
+                    justifyContent : "flex-start",
                     alignItems : "center",
                     }}>
                 <div style={{ height: '25%', margin: '5% 0 0 0' }}> 
@@ -81,14 +79,17 @@ export default function BankForm( styles ){
                 <form 
                     onSubmit={handleSubmit}
                     style = {{ 
-                        height : "40%", 
+                        height : "50%", 
                         width : "100%",
+                        margin: "5%",
                         display : "flex",
                         flexDirection : "column",
                         justifyContent : "flex-start",
                         alignItems : "center",
+                        gap: "5%"
                     }}>
-                    <FormField
+                    <div style={{ display: 'flex', flexDirection: "column", justifyContent: 'space-around', alignItems: 'center', width: '100%', height: '100%'}}>
+                        <FormField
                         key="institution"
                         name="institution"
                         label="Institution"
@@ -107,41 +108,42 @@ export default function BankForm( styles ){
                             <option value="" disabled>
                                 Select a institution
                             </option>
+                            
                             {institutions.map((opt) => (
                                 <option key={opt.id} value={opt.id}>
                                     {opt.name}
                                 </option>
                             ))}
                         </select>
-                    </FormField>
-                    <FormField
-                        key = "accountType"
-                        name = "accountType"
-                        label = "Account Type"
-                        required= {true}
-                        style={{
-                            width : "90%"
-                        }}
-                        >
-                        <select
-                            name="accountType"
-                            value={formData["accountType"]}
-                            onChange={handleChange}
-                            required={true}
+                        </FormField>
+                        <FormField
+                            key = "account_type"
+                            name = "account_type"
+                            label = "Account Type"
+                            required= {true}
+                            style={{
+                                width : "90%"
+                            }}
                             >
-                            <option value="" disabled>
-                                "Select a Account Type"
-                            </option>
-                            {accountTypeOptions.map((opt) => (
-                                <option key={opt} value={opt}>
-                                    {opt}
+                            <select
+                                name="account_type"
+                                value={formData["account_type"]}
+                                onChange={handleChange}
+                                required={true}
+                                >
+                                <option value="" disabled>
+                                    "Select a Account Type"
                                 </option>
-                            ))}
-                        </select>
-                    </FormField>
+                                {account_typeOptions.map((opt) => (
+                                    <option key={opt} value={opt}>
+                                        {opt}
+                                    </option>
+                                ))}
+                            </select>
+                        </FormField>
+                    </div>
+                    <PinkButton text = "Add a Bank" style = {{ width: "40%", margin: "5%"}}/>
                 </form>
-
-                <PinkButton text = "Add a Bank" style = {{ width: "40%", margin: "20px" }}/>
             </DarkBox>
     )
 

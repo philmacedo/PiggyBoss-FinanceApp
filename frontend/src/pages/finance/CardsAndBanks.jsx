@@ -3,18 +3,24 @@ import SelectBox from "../../components/cardsandbanks/SelectBox";
 import DarkBox from "../../components/DarkBox";
 import BankForm from "../../components/cardsandbanks/BankForm";
 import CardForm from "../../components/cardsandbanks/CardForm";
+import CategoriesForm from "../../components/cardsandbanks/CategoriesForm";
+import TransactionsView from "../../components/finance/TransactionsView"
 import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext"
 import API from "../../utils/api";
 import * as financeServices from "../../services/financeServices"
 
+
 export default function CardsAndBanks(){
 
     const { userInfo, loading } = useAuth()
-    const [categories, setCategories] = useState([]);
-    const [cards, setCards] = useState([]);
     const [banks, setBanks] = useState([]);
-    const [callCreateForm, setCallCreateForm] = useState("");
+    const [bankSelected, setBankSelected] = useState([]);
+    const [cards, setCards] = useState([]);
+    const [cardSelected, setCardSelected] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [categorySelected, setCategorySelected] = useState([]);
+    const [visibleForm, setVisibleForm] = useState(null);
 
     useEffect(() => {
         if (!userInfo && !loading) return 
@@ -48,32 +54,41 @@ export default function CardsAndBanks(){
             <div className={styles["sidebar"]}>
 
                 <SelectBox label="Banks" 
-                options = {banks.map(bank => bank.institution.name)} 
-                cardstyle={{ width : "70%", height: "30%" }}
-                titlebuttonlabel="+"
-                titlebuttoncallback={() => console.log("teste")}
+                    options = {banks.map(bank => bank.institution.name)} 
+                    cardstyle = {{ width : "70%", height: "30%" }}
+                    titlebuttonlabel = "+"
+                    titlebuttoncallback = {() => setVisibleForm("bank")}
+                    selectcallback = {setBankSelected}
                 />
 
                 <SelectBox label="Cards" 
-                options = {cards.map(card => card.name)} 
-                cardstyle={{ width : "70%", height: "30%" }}
-                titlebuttonlabel="+"
-                titlebuttoncallback={() => console.log("teste")}
+                    options = {cards.map(card => card.name)} 
+                    cardstyle={{ width : "70%", height: "30%" }}
+                    titlebuttonlabel = "+"
+                    titlebuttoncallback=  {() => setVisibleForm("card")}
+                    selectcallback = {setCardSelected}
                 />
 
                 <SelectBox label="Categories" 
-                options = {categories.map(cat => cat.name)} 
-                cardstyle={{ width : "70%", height: "30%" }}
-                titlebuttonlabel="+"
-                titlebuttoncallback={() => console.log("teste")}
+                    options = {categories.map(cat => cat.name)} 
+                    cardstyle = {{ width : "70%", height: "30%" }}
+                    titlebuttonlabel = "+"
+                    titlebuttoncallback = {() => setVisibleForm("cat")}
+                    selectcallback = {setCategorySelected}
                 />
 
             </div>
             <div className={styles["content"]}>
                 
-                    {/* <BankForm/>  */}
-                    <CardForm />
-                
+                {visibleForm === 'bank' && <BankForm />}
+                {visibleForm === 'card' && <CardForm />}
+                {visibleForm === 'cat' && <CategoriesForm />}
+                {visibleForm === null && 
+                <DarkBox style ={{ width : "90%", minwidth : "300px", height : "90%", minheight : "100px" }} >
+                        <TransactionsView bank={bankSelected} card={cardSelected} category={categorySelected}/>
+                </DarkBox>
+                }
+
             </div>
         </div>
     )

@@ -6,23 +6,38 @@ import API from "../../utils/api";
 import Image from "../Image";
 import logo from "../../assets/nerd.png";
 import { useAuth } from "../../context/AuthContext"
+import { fetchBanks, fetchInstitution } from "../../services/financeServices";
 
 
 export default function CardForm( styles ){
 
     const { userInfo, loading } = useAuth()
     const [banks, setBanks] = useState([])
+    const [institutions, setInstitutions] = useState([])
     const [formData, setFormData] = useState({
         name: '',
         bank: '',
     })
 
+    const getInstitutionDataById = (id, list) => {
+        const item = list.find(opt => opt.id === id);
+        return item ? item.name : '';
+    }
+
+    function capitalize(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
     const fetchData = async () => {
         try {
-            const getBanks = await API["finance"].get("bank_account")
-            console.log(getBanks.data)
+            const getBanks = await fetchBanks()
+            const getInstitutions = await fetchInstitution()
+            console.log(getBanks)
+            console.log(getInstitutions)
 
-            setBanks(getBanks.data)
+            setBanks(getBanks)
+            setInstitutions(getInstitutions)
+
         } catch (err) {
             console.log(err)
         }
@@ -59,20 +74,18 @@ export default function CardForm( styles ){
             } else{
                 console.log('Error adding card');
             }
-        
-            setSuccess('');
         }
     };
 
     const CARD_FORM = (
             <DarkBox 
                 style = {{ 
-                    height : "70%", 
+                    height : "55%", 
                     width : "40%",
                     maxHeight: "600px",
                     display : "flex",
                     flexDirection : "column",
-                    justifyContent : "space-around",
+                    justifyContent : "flex-start",
                     alignItems : "center",
                     }}>
                 <div style={{ height: '25%', margin: '5% 0 0 0' }}> 
@@ -81,13 +94,16 @@ export default function CardForm( styles ){
                 <form 
                     onSubmit={handleSubmit}
                     style = {{ 
-                        height : "40%", 
+                        height : "50%", 
                         width : "100%",
+                        margin: "5%",
                         display : "flex",
                         flexDirection : "column",
                         justifyContent : "flex-start",
                         alignItems : "center",
+                        gap: "5%"
                     }}>
+                    <div style={{ display: 'flex', flexDirection: "column", justifyContent: 'space-around', alignItems: 'center', width: '100%', height: '100%'}}>
                     <FormField
                         key="cardName"
                         name="cardName"
@@ -102,7 +118,7 @@ export default function CardForm( styles ){
                     <FormField
                         key="bank"
                         name="bank"
-                        label="bank"
+                        label="Bank"
                         required={true}
                         style={{
                             width : "90%",
@@ -110,7 +126,7 @@ export default function CardForm( styles ){
                         }}
                         >
                         <select
-                            name="institution"
+                            name="bank"
                             value={formData["bank"]}
                             onChange={handleChange}
                             required={true}
@@ -120,14 +136,15 @@ export default function CardForm( styles ){
                             </option>
                             {banks.map((opt) => (
                                 <option key={opt.id} value={opt.id}>
-                                    {opt.institution.name}
+                                    {opt.institution.name} - {capitalize(opt.account_type)}
                                 </option>
                             ))}
                         </select>
                     </FormField>
+                    
+                    </div>
+                    <PinkButton text = "Add a Card" style = {{ width: "40%", margin: "5%" }}/>
                 </form>
-
-                <PinkButton text = "Add a Card" style = {{ width: "40%", margin: "20px" }}/>
             </DarkBox>
     )
 
