@@ -1,21 +1,22 @@
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import API from "../../utils/api";
-import styles from "./Transactions.module.css";
-import nerd from "../../assets/nerd.png";
-import { useAuth } from "../../context/AuthContext";
-import DarkBox from "../../components/DarkBox";
-import FormField from "../../components/FormField";
-import PinkButton from "../../components/PinkButton";
-import Message from "../../components/Message";
-import NeedLogin from "../../components/NeedLogin";
+import { useState, useEffect } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import API from "../../utils/api"
+import styles from "./Transactions.module.css"
+import nerd from "../../assets/nerd.png"
+import { useAuth } from "../../context/AuthContext"
+import DarkBox from "../../components/DarkBox"
+import FormField from "../../components/FormField"
+import PinkButton from "../../components/PinkButton"
+import TransactionsView from "../../components/finance/TransactionsView"
+import Message from "../../components/Message"
+import NeedLogin from "../../components/NeedLogin"
+import { fetchTransactions } from "../../services/financeServices"
 
 export default function Transactions() {
 
   const navigate = useNavigate();
   const { userInfo, loading } = useAuth()
-
-  const [transactions, setTransactions] = useState([]);
+  
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
@@ -36,30 +37,12 @@ export default function Transactions() {
     description: ''
   });
 
-  const [hiddenTransactions, setHiddenTransactions] = useState([]);
-
   useEffect(() => {
     if (!userInfo && !loading) return
-
-    fetchTransactions()
+    
     fetchOptions()
-  }, [userInfo]);
+  }, [userInfo])
 
-
-  const fetchTransactions = async () => {
-
-    try {
-      const response = await API["finance"].get("/transactions/");
-      setTransactions(response.data);
-      setError('');
-    } catch (err) {
-      if (err.response?.status === 401) {
-        setError("Session Expired.");
-      } else if (err.response?.data) {
-        setError(Object.values(err.response.data).flat().join(' '));
-      } 
-    }
-  };
 
   const fetchOptions = async () => {
     try {
@@ -69,7 +52,7 @@ export default function Transactions() {
         API["finance"].get("/bank_account/"),
         API["finance"].get("/third/"),
       ]);
-
+      
       setCategories(catRes.data);
       setCards(cardRes.data);
       setBanks(bankRes.data);
@@ -77,12 +60,12 @@ export default function Transactions() {
 
     } catch (err) {
       if (err.response?.status === 401) {
-        setError("Session Expired.");
+        setError("Session Expired.")
       } else if (err.response?.data) {
         setError(Object.values(err.response.data).flat().join(' '));
       }
     }
-  };
+  }
 
   const handleChange = (e) => {
     setFormData({
@@ -120,13 +103,6 @@ export default function Transactions() {
     }
   };
 
-  const handleHideTransaction = (id) => {
-    setHiddenTransactions(prev => [...prev, id]);
-  };
-
-  const handleShowAll = () => {
-  setHiddenTransactions([]);
-  };
 
   const SIMPLE_FIELDS = [
     { label: "Name of Transaction", name: "name", type: "text",  placeholder: 'Ex: Market', required: true, style: { width : "95%", gridColumn: "span 2" }},
@@ -157,7 +133,7 @@ export default function Transactions() {
 
   return (
     <div className={styles["transactions-page"]}>
-      <DarkBox style = {{ width : "30%", minwidth : "300px", height : "90%" }}>
+      <DarkBox style = {{ width : "30%", height : "90%", minWidth : "300px", minHeight: "800px" }}>
 
         <div style={{margin: '5% 0 0 0' }}> 
             <img src={nerd} alt="Logo" className={styles['logo']} />
@@ -258,25 +234,8 @@ export default function Transactions() {
       </DarkBox>
 
 
-      <DarkBox style ={{ width : "30%", minwidth : "300px", height : "90%", minheight : "100px" }} >
-        <h2 className={styles.title}>Transactions List</h2>
-        <button className={styles["show-all-button"]} onClick={handleShowAll}>
-          Show All History
-        </button>
-
-        <ul className={styles["transactions-list"]}>
-          {transactions.filter(tx => !hiddenTransactions.includes(tx.id)).map((tx) => (
-            <li key={tx.id} className={styles["transaction-item"]}>
-              <strong>{tx.name}</strong> - R$ {parseFloat(tx.amount).toFixed(2)}<br />
-              <span>{tx.transactions_type} • {tx.payment_method} • {tx.date} • </span>
-              <button className={styles["hide-button"]}
-                onClick={() => handleHideTransaction(tx.id)}
-              >
-                Hide
-              </button>
-            </li>
-          ))}
-        </ul>
+      <DarkBox style ={{ width : "50%", minwidth : "300px", height : "90%", minheight : "100px" }} >
+        <TransactionsView />
       </DarkBox>
 
     </div>

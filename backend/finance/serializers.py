@@ -1,13 +1,20 @@
 from rest_framework import serializers
 from .models import *
 
+class InstitutionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Institution
+        fields = "__all__"
+        read_only_fields = ['name','code','institution_type','active','created_at']
+
 class BankAccountSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = BankAccount
         fields = "__all__"
-        read_only_fields = ['user']
+        read_only_fields = ['user']  
         depth = 1
-        
+
     account_type = serializers.ChoiceField(
         choices = [
             ('checking', 'Checking'), 
@@ -21,7 +28,14 @@ class BankAccountSerializer(serializers.ModelSerializer):
         }
     )
 
+    # institution = serializers.PrimaryKeyRelatedField(
+    #     queryset=Institution.objects.all(),
+    #     required=False,
+    #     allow_null=True
+    # )
+    
     def create(self, validated_data):
+        print("validated_data:", validated_data)
         validated_data['user'] = self.context['request'].user
         return super().create(validated_data)
 

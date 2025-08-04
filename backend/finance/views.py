@@ -3,6 +3,14 @@ from .models import *
 from .serializers import *
 from rest_framework.permissions import IsAuthenticated
 
+class InstitutionViewSet(viewsets.ModelViewSet):
+    queryset = Institution.objects.all()
+    serializer_class = InstitutionSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return self.queryset
+    
 class BankAccountViewSet(viewsets.ModelViewSet):
     queryset = BankAccount.objects.all()
     serializer_class = BankAccountSerializer

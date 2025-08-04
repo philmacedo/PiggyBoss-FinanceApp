@@ -31,10 +31,11 @@ export default function SelectButton({label, options, width, height}) {
   };
 
   return (
-    <FormControl fullWidth sx = {{ display: 'flex', flexDirection: 'column',  alignItems: 'center', width: "100%" }}>
-        <InputLabel id="select-label" sx={{ color: '#f5f5f5', padding: '0 10%' }}>{label}</InputLabel>
+    <FormControl fullWidth variant="outlined" sx = {{ width: width }}>
+        <InputLabel id="select-label" sx={{ color: '#f5f5f5'}}>{label}</InputLabel>
         <Select
           labelId="select-label"
+          variant="outlined"
           value={options.includes(option) ? option : ""}
           label={label}
           onChange={handleChange}
@@ -60,8 +61,6 @@ export default function SelectButton({label, options, width, height}) {
             '.MuiSvgIcon-root': {
               color: '#f5f5f5',
             },
-            width : width,
-            height : height
           }}
 
         >{options.map((opt, index) => (
