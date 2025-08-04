@@ -8,9 +8,6 @@ import Dashboard from './pages/dashboard/Dashboard.jsx';
 import CardsAndBanks from './pages/finance/CardsAndBanks.jsx';
 import ForgotPassword from "./pages/account/ForgotPassword";
 import Transactions from './pages/finance/Transactions.jsx';
-
-import { AuthProvider } from './context/AuthContext';
-import CardsAndBanks from './pages/finance/CardsAndBanks.jsx';
 import Budgets from './pages/planning/Budgets.jsx';
 
 export default function App() {

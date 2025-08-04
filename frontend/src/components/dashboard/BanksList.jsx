@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import * as financeServices from "../../services/financeServices";
 import DarkBox from "../DarkBox"
 import styles from './Dashboard.module.css'
+import { fetchBanks } from "../../services/financeServices";
 
 export default function BanksList() {
 
@@ -12,7 +13,7 @@ export default function BanksList() {
         }, []);
     
         const fetchData = async () => {
-            const fetchedbanks = await financeServices.fetchBanks();
+            const fetchedbanks = await fetchBanks();
             if (fetchedbanks) {
                 const names = fetchedbanks.map(item => item.institution.name);
                 setBanks(names);
