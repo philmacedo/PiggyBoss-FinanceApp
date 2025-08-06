@@ -35,6 +35,22 @@ This project aims to learn and apply real practices of REST API, database modeli
 
 ### Create and View Transactions
 
-![transaction-page](https://github.com/user-attachments/assets/74f53fd2-6a38-4fb9-92c2-95a86dac5d4d)
+<img width="1899" height="951" alt="image (2)" src="https://github.com/user-attachments/assets/d47547a2-8cfd-4a8b-a5ce-803241c7ed4b" />
 
+### Cards and Banks (Filter transactions by cards, categories, payment method and more!)
+<img width="1905" height="949" alt="image" src="https://github.com/user-attachments/assets/e96d7928-b753-4d79-8d2f-69bfc75961da" />
 
+# Future Improvements
+This was the initial phase of the project to deliver the assignment for the UERJ course. From this point on, the project will be revamped aiming at current React design patterns and a restructuring for better code understanding and modularity, as well as the delivery of new features.
+
+A preview of the new layout, designed on Figma:
+
+### Banks and Transactions
+
+<img width="2732" height="1536" alt="image" src="https://github.com/user-attachments/assets/2f4714f5-e39d-4eb3-a442-dffb90cab3ca" />
+
+### Planning Section
+
+<img width="2732" height="1536" alt="image" src="https://github.com/user-attachments/assets/5869ff01-ec63-4d44-b462-54f98908b3fc" />
+
+**And much more!!! 🚀**
