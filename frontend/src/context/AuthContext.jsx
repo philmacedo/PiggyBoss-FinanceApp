@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState, useRef } from "react";
 import API from "../utils/api";
 
 const AuthContext = createContext()
-const REFRESH_URL = "login/refresh/"
+
 
 export function AuthProvider({ children }) {
   const [userInfo, setUserInfo] = useState(null)
@@ -30,7 +30,7 @@ export function AuthProvider({ children }) {
         try {
           refreshed.current = true
 
-          let refresh_response = await API['account'].post(REFRESH_URL, { refresh })
+          let refresh_response = await API.account.post('/login/refresh/', { refresh })
           if (refresh_response) {
             localStorage.setItem("token", refresh_response.data.access);
             await fetchUserInfo();

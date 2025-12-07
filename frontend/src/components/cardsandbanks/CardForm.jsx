@@ -9,7 +9,7 @@ import { useAuth } from "../../context/AuthContext"
 import { fetchBanks, fetchInstitution } from "../../services/financeServices";
 
 
-export default function CardForm( styles ){
+export default function CardForm({ onFormSubmit }){
 
     const { userInfo, loading } = useAuth()
     const [banks, setBanks] = useState([])
@@ -25,8 +25,10 @@ export default function CardForm( styles ){
     }
 
     function capitalize(str) {
-        return str.charAt(0).toUpperCase() + str.slice(1);
-    }
+            // Adicionada verificação de segurança
+            if (!str) return ''; 
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
 
     const fetchData = async () => {
         try {
@@ -59,15 +61,17 @@ export default function CardForm( styles ){
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const requiredFields = ['bank', 'name'];
-        const isValid = requiredFields.every(field => formData[field].trim() !== '');
-        if (!isValid) {
+        // Validação corrigida para verificar se os campos existem
+        if (!formData.name || formData.name.trim() === '' || !formData.bank) {
+            console.log("Validação falhou. Dados:", formData);
             return;
         }
 
         try {
             await API["finance"].post("/card/", formData);
             setFormData({ name: '', bank: '',});
+
+            onFormSubmit?.();
         } catch (err) {
             if (err.response?.data){
                 console.log(Object.values(err.response.data).flat().join(' '));
@@ -105,9 +109,11 @@ export default function CardForm( styles ){
                     }}>
                     <div style={{ display: 'flex', flexDirection: "column", justifyContent: 'space-around', alignItems: 'center', width: '100%', height: '100%'}}>
                     <FormField
-                        key="cardName"
-                        name="cardName"
+                        key="name"
+                        name="name"
                         label="Card Name"
+                        value={formData.name}
+                        onChange={handleChange} 
                         required={true}
                         style={{
                             width : "90%",
@@ -136,7 +142,7 @@ export default function CardForm( styles ){
                             </option>
                             {banks.map((opt) => (
                                 <option key={opt.id} value={opt.id}>
-                                    {opt.institution.name} - {capitalize(opt.account_type)}
+                                    {opt.institution?.name} - {capitalize(opt.account_type)}
                                 </option>
                             ))}
                         </select>

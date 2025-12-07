@@ -49,12 +49,17 @@ export default function CardsAndBanks(){
         }
     }
 
+    function capitalize(str) { // Adicione esta função
+                    if (!str) return '';
+                    return str.charAt(0).toUpperCase() + str.slice(1);
+                }
+
     const CARDS_AND_BANKS = (
         <div className={styles["cardsandbanks"]}>
             <div className={styles["sidebar"]}>
-
+               
                 <SelectBox label="Banks" 
-                    options = {banks.map(bank => bank.institution.name)} 
+                    options = {banks.map(bank => `${bank.institution?.name} - ${capitalize(bank.account_type)}`)} 
                     cardstyle = {{ width : "70%", height: "30%" }}
                     titlebuttonlabel = "+"
                     titlebuttoncallback = {() => setVisibleForm("bank")}
@@ -62,7 +67,7 @@ export default function CardsAndBanks(){
                 />
 
                 <SelectBox label="Cards" 
-                    options = {cards.map(card => card.name)} 
+                    options = {cards.map(card => card?.name)}
                     cardstyle={{ width : "70%", height: "30%" }}
                     titlebuttonlabel = "+"
                     titlebuttoncallback=  {() => setVisibleForm("card")}
@@ -70,7 +75,7 @@ export default function CardsAndBanks(){
                 />
 
                 <SelectBox label="Categories" 
-                    options = {categories.map(cat => cat.name)} 
+                    options = {categories.map(cat => cat?.name)} 
                     cardstyle = {{ width : "70%", height: "30%" }}
                     titlebuttonlabel = "+"
                     titlebuttoncallback = {() => setVisibleForm("cat")}
@@ -80,9 +85,9 @@ export default function CardsAndBanks(){
             </div>
             <div className={styles["content"]}>
                 
-                {visibleForm === 'bank' && <BankForm />}
-                {visibleForm === 'card' && <CardForm />}
-                {visibleForm === 'cat' && <CategoriesForm />}
+                {visibleForm === 'bank' && <BankForm onFormSubmit={fetchOptions} />}
+                {visibleForm === 'card' && <CardForm onFormSubmit={fetchOptions} />}
+                {visibleForm === 'cat' && <CategoriesForm onFormSubmit={fetchOptions} />}
                 {visibleForm === null && 
                 <PiggyBox style ={{ width : "90%", minwidth : "300px", height : "90%", minheight : "100px" }} >
                         <TransactionsView bank={bankSelected} card={cardSelected} category={categorySelected}/>

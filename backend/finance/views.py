@@ -13,11 +13,19 @@ class InstitutionViewSet(viewsets.ModelViewSet):
     
 class BankAccountViewSet(viewsets.ModelViewSet):
     queryset = BankAccount.objects.all()
-    serializer_class = BankAccountSerializer
+    serializer_class = BankAccountWriteSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return BankAccount.objects.filter(user=self.request.user)
+    
+    # Define qual serializer usar com base na AÇÃO (GET vs POST)
+    def get_serializer_class(self):
+        if self.action in ['list', 'retrieve']:
+            # Para GET (ler), use o serializer com depth=1
+            return BankAccountReadSerializer
+        # Para POST, PUT, PATCH (escrever), use o serializer de escrita
+        return BankAccountWriteSerializer
 
 class CardViewSet(viewsets.ModelViewSet):
     queryset = Card.objects.all()

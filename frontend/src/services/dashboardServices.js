@@ -12,7 +12,7 @@ const handleError = (err) => {
 
 export const fetchMonthBalance = async (params) => {
     try {
-        const { data } = await API['dashboard'].get('/month-balance', { params })
+        const { data } = await API['dashboard'].get('/month-balance/', { params })
         return data
     } catch (err) {
         handleError(err)
@@ -22,7 +22,7 @@ export const fetchMonthBalance = async (params) => {
 
 export const fetchExpensesByCategory = async (params) => {
     try {
-        const { data } = await API['dashboard'].get('/expenses-by-category', { params })
+        const { data } = await API['dashboard'].get('/expenses-by-category/', { params })
         return data
     } catch (err) {
         handleError(err)
@@ -32,7 +32,7 @@ export const fetchExpensesByCategory = async (params) => {
 
 export const fetchCategoryExpensesDistribution = async (params) => {
     try {
-        const { data } = await API['dashboard'].get('/category-expenses-distribution', { params })
+        const { data } = await API['dashboard'].get('/category-expenses-distribution/', { params })
         return data
     } catch (err) {
         handleError(err)
@@ -42,7 +42,7 @@ export const fetchCategoryExpensesDistribution = async (params) => {
 
 export const fetchMonthBillTotal = async (params) => {
     try {
-        const { data } = await API['dashboard'].get('/month-bill-total', { params })
+        const { data } = await API['dashboard'].get('/month-bill-total/', { params })
         return data
     } catch (err) {
         handleError(err)
@@ -68,18 +68,19 @@ export const fetchMonthlyBudgets = async (params) => {
             .filter(b => b.month === month && b.year === year)
             .map(b => {
                 const totalSpent = transactions
-                    .filter(tx => {
+                    .filter((tx) => {
                         const txDate = new Date(tx.date);
-                        const txMonth = txDate.getMonth() + 1;
+                        const dateParts = tx.date.split('-');
+                        const txMonth = parseInt(dateParts[1]);;
                         const txYear = txDate.getFullYear();
                         const txCategoryId = tx.category?.id || tx.category;
 
                         return (
-                            txCategoryId === b.category &&
+                            txCategoryId === b.category || txCategoryId === b.category.id
+                        ) &&
                             txMonth === b.month &&
                             txYear === b.year &&
-                            tx.transactions_type === 'expense'
-                        );
+                            tx.transactions_type === 'expense';
                     })
                     .reduce((acc, tx) => acc + parseFloat(tx.amount), 0);
 

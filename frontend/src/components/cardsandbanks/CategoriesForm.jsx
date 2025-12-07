@@ -8,7 +8,7 @@ import logo from "../../assets/images/nerd.png";
 import { useAuth } from "../../context/AuthContext"
 
 
-export default function CategoriesForm( styles ){
+export default function CategoriesForm( { onFormSubmit } ){
 
     const { userInfo, loading } = useAuth()
     const [banks, setBanks] = useState([])
@@ -28,24 +28,31 @@ export default function CategoriesForm( styles ){
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const requiredFields = ['name', 'color', 'balance_type'];
-        const isValid = requiredFields.every(field => formData[field].trim() !== '')
-        if (!isValid) {
-            return
+      
+        // Verifica se 'name' não está vazio e se 'balance_type' foi selecionado.
+        if (!formData.name || formData.name.trim() === '') {
+            console.log("Validação falhou: Name é obrigatório.");
+            return;
+        }
+        if (!formData.balance_type) {
+            console.log("Validação falhou: Category Type é obrigatório.");
+            return;
         }
 
         try {
-            await API["finance"].post("/categories/", formData)
-            setFormData({ name: '', color: '', balance_type: ''})
+            await API["finance"].post("/category/", formData)
+            setFormData({ name: '', color: '#FFFFFF', balance_type: ''})
+
+            onFormSubmit?.();
 
         } catch (err) {
             if (err.response?.data){
-                console.log(Object.values(err.response.data).flat().join(' '))
+                console.log(Object.values(err.response.data).flat().join(' '));
             } else{
-                console.log('Error adding card')
+                console.log('Error adding category');
             }
         
-            setSuccess('');
+            
         }
     };
 
@@ -100,9 +107,11 @@ export default function CategoriesForm( styles ){
                     <div style={{ display: 'flex', flexDirection: "column", justifyContent: 'space-around', alignItems: 'center', width: '100%', height: '100%'}}>
                     
                         <FormField
-                            key="categoryName"
-                            name="categoryName"
+                            key="name"
+                            name="name"
                             label="Category Name"
+                            value={formData.name}
+                            onChange={handleChange}
                             required={true}
                             style={{
                                 width : "90%",
@@ -146,7 +155,7 @@ export default function CategoriesForm( styles ){
                         ))}
                     </div>
                 
-                <PinkButton text = "Add a Card" style = {{ width: "40%", margin: "5%" }}/>
+                <PinkButton text = "Add a Category" style = {{ width: "40%", margin: "5%" }}/>
                 
                 </form>
             </PiggyBox>

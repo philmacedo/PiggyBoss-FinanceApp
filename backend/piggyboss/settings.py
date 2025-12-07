@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from dotenv import load_dotenv 
 from pathlib import Path
 import os, dj_database_url
+from django.core.exceptions import ImproperlyConfigured
 
 load_dotenv()
 
@@ -27,9 +28,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRETKEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "localhost", 
+    "127.0.0.1", 
+    ".amazonaws.com", 
+    ".cloudfront.net"
+]
 
 
 # Application definition
@@ -60,7 +66,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny',
     )
 }
 
@@ -69,7 +75,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -79,7 +85,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'piggyboss.urls'
 
-CORS_ALLOW_ALL_ORIGINS = True  # Para desenvolvimento
+CORS_ALLOW_ALL_ORIGINS = False  # Para desenvolvimento
+CORS_ALLOWED_ORIGINS = ["http://localhost:3000", "http://localhost:5173", "http://piggyboss-frontend.s3-website-sa-east-1.amazonaws.com"]
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = ["content-type", "authorization", "x-csrftoken"]
+CORS_ALLOW_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
+
 
 
 TEMPLATES = [
@@ -102,9 +113,20 @@ WSGI_APPLICATION = 'piggyboss.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+
+DATABASE_URL_FROM_ENV = os.getenv('DATABASE_URL')
+
+if DATABASE_URL_FROM_ENV is None:
+    raise ImproperlyConfigured(
+        "A variável de ambiente 'DATABASE_URL' não está definida. "
+        "Para desenvolvimento, crie um arquivo .env com a string do Pooler do Supabase. "
+        "Em produção (Lambda), configure esta variável no painel da AWS."
+    )
+
 DATABASES = {
     'default': dj_database_url.config(
-        default=f'postgresql://{os.getenv("USERNAME_DB")}:{os.getenv("PASSWORD_DB")}@aws-0-sa-east-1.pooler.supabase.com:{os.getenv("PORT_DB")}/postgres'
+        default=DATABASE_URL_FROM_ENV,
+        conn_max_age=600 # Opcional: bom para performance com o Pooler
     )
 }
 
@@ -160,5 +182,5 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'eduardohmg11@gmail.com'
-EMAIL_HOST_PASSWORD = 'zzdc owws efsq rxja'
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = 'PiggyBoss <eduardohmg11@gmail.com>'

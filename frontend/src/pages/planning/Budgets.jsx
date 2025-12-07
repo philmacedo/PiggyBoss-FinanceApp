@@ -245,7 +245,8 @@ export default function Budgets() {
                         const totalSpent = transactions
                             .filter((tx) => {
                                 const txDate = new Date(tx.date);
-                                const txMonth = txDate.getMonth() + 1;
+                                const dateParts = tx.date.split('-');
+                                const txMonth = parseInt(dateParts[1]);
                                 const txYear = txDate.getFullYear();
                                 const txCategoryId = tx.category?.id || tx.category;
 
@@ -254,6 +255,7 @@ export default function Budgets() {
                                 ) &&
                                     txMonth === budget.month &&
                                     txYear === budget.year;
+                                    
                             })
                             .reduce((acc, tx) => acc + parseFloat(tx.amount), 0);
 

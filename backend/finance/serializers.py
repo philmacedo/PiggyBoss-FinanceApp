@@ -7,7 +7,7 @@ class InstitutionSerializer(serializers.ModelSerializer):
         fields = "__all__"
         read_only_fields = ['name','code','institution_type','active','created_at']
 
-class BankAccountSerializer(serializers.ModelSerializer):
+class BankAccountReadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BankAccount
@@ -21,6 +21,24 @@ class BankAccountSerializer(serializers.ModelSerializer):
             ('savings', 'Savings'),
             ('investment', 'Investment'),
             ('joint', 'Joint')
+        ]
+    )
+
+    
+class BankAccountWriteSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = BankAccount
+        fields = "__all__"
+        read_only_fields = ['user']  
+
+    # Definir explicitamente os campos que esperamos do frontend
+    account_type = serializers.ChoiceField(
+        choices = [
+            ('checking', 'Checking'), 
+            ('savings', 'Savings'),
+            ('investment', 'Investment'),
+            ('joint', 'Joint')
         ],
         error_messages = {
             'invalid_choice' : 'The account type must be one of the following: ' \
@@ -28,16 +46,17 @@ class BankAccountSerializer(serializers.ModelSerializer):
         }
     )
 
-    # institution = serializers.PrimaryKeyRelatedField(
-    #     queryset=Institution.objects.all(),
-    #     required=False,
-    #     allow_null=True
-    # )
+    institution = serializers.PrimaryKeyRelatedField(
+        queryset=Institution.objects.all(),
+        required=False,
+        allow_null=True
+    )
     
     def create(self, validated_data):
         print("validated_data:", validated_data)
         validated_data['user'] = self.context['request'].user
         return super().create(validated_data)
+
 
 class CardSerializer(serializers.ModelSerializer):
     class Meta:
@@ -57,7 +76,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     balance_type = serializers.ChoiceField(
         choices = [
-            ('expenses', 'Expenses'),
+            ('expense', 'Expense'),
             ('income', 'Income')
         ],
         error_messages = {

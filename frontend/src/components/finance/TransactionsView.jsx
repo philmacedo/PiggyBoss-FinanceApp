@@ -5,8 +5,9 @@ import styles from "./TransactionsView.module.css";
 import * as financeServices from "../../services/financeServices"
 import SelectTabs from "../SelectTabs";
 import SelectButton from "../SelectButton";
+import Button from '@mui/material/Button';
 
-export default function TransactionsView({ bank = null, card = null, category = null }){
+export default function TransactionsView({ bank = null, card = null, category = null, transactions = [], hiddenTransactions = [], onHide,onDelete,setHiddenTransactions }){
 
     const monthNames = [
         "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
@@ -17,25 +18,11 @@ export default function TransactionsView({ bank = null, card = null, category = 
     const currentMonthIndex = today.getMonth()
     const currentYear = today.getFullYear()
 
-    const { userInfo, loading } = useAuth()
-    const [transactions, setTransactions] = useState([])
+    
     const [month, setMonth] = useState(monthNames[currentMonthIndex])
     const [year, setYear] = useState(currentYear)
-    const [type, setType] = useState()
-    const [method, setMethod] = useState()
-
-    useEffect(() => {
-        if (!userInfo && !loading) return
-        fetchData()
-
-    }, [userInfo, month, year])
-
-    const fetchData = async () => {
-        if (!userInfo || loading) return;
-
-        const data = await financeServices.fetchTransactions();
-        setTransactions(data);
-    };
+    const [type, setType] = useState(null)
+    const [method, setMethod] = useState(null)
 
     const handleMonthSelect = (month) => {
 
@@ -47,54 +34,114 @@ export default function TransactionsView({ bank = null, card = null, category = 
         return monthMap[month]
     }
 
+    //FUNÇÃO DE RESET
+    const handleResetFilters = () => {
+        setType(null);
+        setMethod(null);
+        setHiddenTransactions([])
+    };
+
+
+    const filteredTransactions = transactions.filter(tx => {
+        // console.log(tx) // (Pode manter os seus logs de debug se quiser)
+        // console.log(category)
+        // console.log(card)
+        // console.log(bank)
+        
+        // A sua lógica de data correta (sem bug de fuso horário)
+        const dateParts = tx.date.split('-');
+        const txMonth = parseInt(dateParts[1]);
+
+        // Filtros externos (props)
+        const bankFilter = !bank || tx.bank === bank.id;
+        const cardFilter = !card || tx.card === card.id;
+        const categoryFilter = !category || tx.category === category.id;
+
+        // Filtros internos (state)
+        const typeFilter = !type || tx.transactions_type === type;
+        const methodFilter = !method || tx.payment_method === method;
+        const isHidden = hiddenTransactions.includes(tx.id);
+
+        return (
+            txMonth === handleMonthSelect(month) &&
+            bankFilter &&
+            cardFilter &&
+            categoryFilter &&
+            typeFilter &&
+            methodFilter &&
+            !isHidden
+        );
+    });
+
+    const totalExpense = filteredTransactions
+        .filter(tx => tx.transactions_type === 'expense') // Filtra só despesas
+        .reduce((sum, tx) => sum + parseFloat(tx.amount), 0); // Soma
+
+    const totalIncome = filteredTransactions
+        .filter(tx => tx.transactions_type === 'income') // Filtra só receitas
+        .reduce((sum, tx) => sum + parseFloat(tx.amount), 0); // Soma
+
     const TRANSACTIONS_VIEW = (
         <>  
             <div style={{ width: "100%", height: "8%", padding: "0% 1%", display : "flex", justifyContent: "space-between", alignItems: "center"}}>
-                <SelectTabs options={['expense', 'income']} onSelect={setType} styles={{ width: "35%" }} indicator={false} />
+                <SelectTabs options={['expense', 'income']} onSelect={setType} value={type} styles={{ width: "35%" }} indicator={false} />
                 <h3>Transactions Resume</h3>
-                <SelectTabs options={['debit', 'credit']} onSelect={setMethod} styles={{ width: "35%" }} indicator={false} />
+                <SelectTabs options={['card', 'cash', 'pix']} onSelect={setMethod} value={method} styles={{ width: "35%" }} indicator={false} />
             </div>
             
-            <SelectTabs options={monthNames} onSelect={setMonth} def={currentMonthIndex}/>
+            <SelectTabs options={monthNames} onSelect={setMonth} value={month}/>
+
+            <Button 
+                onClick={handleResetFilters} 
+                sx={{ color: '#FF66C4', margin: '10px 0', alignSelf: 'center' }}
+            >
+                Resetar Filtros
+            </Button>
 
             <ul className={styles["transactions-list"]}>
-            {transactions
-            .filter(tx => {
-                console.log(tx)
-                console.log(category)
-                console.log(card)
-                console.log(bank)
-                const txMonth = new Date(tx.date).getMonth() + 1
-                return (
-                txMonth === handleMonthSelect(month) &&
-                // ( bank == null || tx.bank === bank ) && 
-                // ( card == null || tx.card === card ) &&
-                // ( category == null || tx.category === category ) &&
-                ( !type || tx.transactions_type === type ) &&
-                ( !method || tx.payment_method === method )
-                )
-            })
-            .map((tx) => (
+            {filteredTransactions.map((tx) => (
                 <li key={tx.id} className={styles["transaction-item"]} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0' }}>
                     <span style={{ flex: 2, paddingLeft: '10px' }}><strong>{tx.name}</strong></span>
                     <span style={{ flex: 1, textAlign: 'center' }}>R$ {parseFloat(tx.amount).toFixed(2)}</span>
                     <span style={{ flex: 1, textAlign: 'center' }}>{tx.transactions_type}</span>
                     <span style={{ flex: 1, textAlign: 'center'}}>{tx.payment_method}</span>
                     <span style={{ flex: 1, textAlign: 'center' }}>{tx.date}</span>
+                    <span style={{ flex: 1, textAlign: 'center', display: 'flex', justifyContent: 'center', gap: '5px' }}>
+                        <button 
+                            className={styles["hide-button"]} 
+                            onClick={() => onHide(tx.id)}
+                            title="Hide"
+                        >
+                            Hide
+                        </button>
+                        <span> • </span>
+                        <button 
+                            className={styles["delete-button"]} 
+                            onClick={() => onDelete(tx.id)}
+                            title="Delete"
+                        >
+                            Delete
+                        </button>
+                    </span>
                 </li>
             ))}
             </ul>
+
             <div style={{ width: "90%", display: "flex", justifyContent: "space-between" }}>
-                <p>Total</p>
-                <p>$ {transactions
-                .filter(tx => {
-                    const txMonth = new Date(tx.date).getMonth() + 1
-                    return (
-                        txMonth === handleMonthSelect(month)
-                    )
-                })
-                .reduce((sum, tx) => sum + parseFloat(tx.amount), 0)}
-                </p>
+                <div style={{ textAlign: "left" }}>
+                    <p style={{ margin: 0, fontSize: '0.9rem', color: '#c0392b' }}>Total Expense:</p>
+                    <p style={{ margin: 0, fontSize: '1.2rem', fontWeight: 'bold' }}>
+                        $ {totalExpense.toFixed(2)}
+                    </p>
+                </div>
+
+                {/* Total de Receitas (Income) */}
+                <div style={{ textAlign: "right" }}>
+                    <p style={{ margin: 0, fontSize: '0.9rem', color: '#2ecc71' }}>Total Income:</p>
+                    <p style={{ margin: 0, fontSize: '1.2rem', fontWeight: 'bold' }}>
+                        $ {totalIncome.toFixed(2)}
+                    </p>
+                </div>
             </div>
         </>
     )

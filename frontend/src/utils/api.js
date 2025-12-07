@@ -2,7 +2,7 @@ import axios from 'axios';
 
 let isRefreshing = false;
 let failedQueue = [];
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'; 
+const API_BASE_URL = import.meta.env.VITE_API_URL; 
 const REFRESH_URL = `${API_BASE_URL}/account/login/refresh/`;
 
 const processQueue = (error, token = null) => {
@@ -17,8 +17,8 @@ const processQueue = (error, token = null) => {
   failedQueue = [];
 };
 
-const createAPI = (baseURL) => {
-  const instance = axios.create({ baseURL: `${API_BASE_URL}${baseURL}` })
+const createAPI = (resourcePath) => {
+  const instance = axios.create({ baseURL:`${API_BASE_URL}${resourcePath}` });
 
   instance.interceptors.request.use(config => {
 
@@ -84,8 +84,8 @@ const createAPI = (baseURL) => {
 };
 
 const API = {
-  account: axios.create({baseURL: `${API_BASE_URL}/account`}),
-  finance: createAPI('/finance'),
+  account: createAPI('/account'), // baseURL será .../teste/account
+  finance: createAPI('/finance'), // baseURL será .../teste/finance
   dashboard: createAPI('/dashboard'),
   planning: createAPI('/planning'),
 }

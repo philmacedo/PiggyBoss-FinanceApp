@@ -12,7 +12,7 @@ import Budgets from './pages/planning/Budgets.jsx';
 
 export default function App() {
   return (
-    <Router basename="/teste">
+    <Router>
       <AuthProvider>
         <NavBar />
         <Routes>

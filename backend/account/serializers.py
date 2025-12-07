@@ -14,7 +14,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField()
     last_name = serializers.CharField()
     email = serializers.EmailField()
-    date_of_birth = serializers.DateField(required=False, allow_null=True)
+    date_of_birth = serializers.DateField(required=False, allow_null=True, input_formats=['%Y-%m-%d', '%d/%m/%Y'])
     phone_number = PhoneNumberField(region="BR", required=False, allow_null=True)
     password = serializers.CharField(write_only=True)
 

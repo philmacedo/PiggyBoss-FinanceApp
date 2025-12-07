@@ -53,7 +53,11 @@ export default function Register() {
         phone_number: formData.phone_number || null,
         date_of_birth: formData.date_of_birth || null
       };
-      const response = await API["account"].post('/register/', dataToSend);
+      const response = await API.account.post('/register/', dataToSend, {
+        headers: {
+            "Content-Type": "application/json" // Header explícito
+          }
+      });
       setError('');
       navigate('/', { state: { successMessage: 'Cadastro realizado com sucesso!' } });;
       

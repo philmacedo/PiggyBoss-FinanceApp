@@ -1,0 +1,67 @@
+# serverless.yml - Configuração para o PiggyBoss Backend
+
+service: piggyboss-sls  # Um nome novo para o seu serviço na AWS
+
+provider:
+  name: aws
+  runtime: python3.12
+  region: sa-east-1  # A sua região
+  stage: dev         # O seu ambiente (ex: "dev" ou "prod"). A sua URL terá /dev/ nela.
+
+
+  # Variáveis de ambiente que serão injetadas no Lambda
+  environment: 
+    DJANGO_SETTINGS_MODULE: piggyboss.settings
+    # O Serverless irá ler estas variáveis do seu ficheiro .env local
+    SECRETKEY: ${env:SECRETKEY} 
+    DATABASE_URL: ${env:DATABASE_URL}
+    EMAIL_HOST_PASSWORD: ${env:EMAIL_HOST_PASSWORD}
+    DEBUG: "False"
+
+plugins:
+  - serverless-wsgi              # Plugin que faz a "ponte" WSGI (substitui o Mangum)
+  - serverless-python-requirements # Plugin que gere as dependências
+
+custom:
+  wsgi:
+    # Aponta para a sua aplicação Django (pasta.ficheiro.variável)
+    app: piggyboss.wsgi.application 
+    packRequirements: false
+
+  pythonRequirements:
+    dockerizePip: true # ESSENCIAL: Usa o Docker para construir pacotes Linux (psycopg2, Pillow)
+    zip: true
+    layer: true        # Coloca as dependências num Layer automaticamente
+    # --- ADICIONE ESTA SECÇÃO ---
+        # Força a inclusão de 'werkzeug' no Layer.
+    include:
+      - werkzeug
+
+functions:
+  api:
+    # O plugin 'serverless-wsgi' cria este handler 'wsgi_handler.handler' para si
+    handler: wsgi_handler.handler 
+    events:
+      # --- ALTERAÇÃO PRINCIPAL AQUI ---
+      # Trocámos 'httpApi: "*"' por 'http:' (API v1)
+      - http: 
+          path: /{proxy+} # Rota "apanha-tudo"
+          method: any
+          cors: true # Diz ao plugin 'serverless-wsgi' para gerir o CORS por nós
+      - http:
+          path: / # Rota para a raiz (garante que /dev/ também funciona)
+          method: any
+          cors: true
+      # -------------------------------
+
+package:
+  patterns: # Lista de ficheiros a ignorar no deploy (para manter o .zip pequeno)
+    - '!node_modules/**'
+    - '!.serverless/**'
+    - '!.venv/**'
+    - '!__pycache__/**'
+    - '!.pytest_cache/**'
+    - '!.git/**'
+    - '!.env'
+    - '!README.md'
+    - '!.vscode/**'

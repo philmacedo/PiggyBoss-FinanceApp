@@ -4,24 +4,22 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pandas = "*"
 djangorestframework = "*"
-numpy = "*"
-matplotlib = "*"
-seaborn = "*"
-django-debug-toolbar = "*"
 django-filter = "*"
-psycopg2 = "*"
 python-dotenv = "*"
+psycopg2-binary = "*"
+django-colorfield = "*"
+Pillow = "*"
 dj-database-url = "*"
-factory-boy = "*"
 django-phonenumber-field = "*"
 django-phonenumbers = "*"
 djangorestframework-simplejwt = "*"
 django-cors-headers = "*"
-django-colorfield = "*"
+werkzeug = "*"
 
 [dev-packages]
+django-debug-toolbar = "*"
+factory-boy = "*"
 
 [requires]
 python_version = "3.12"

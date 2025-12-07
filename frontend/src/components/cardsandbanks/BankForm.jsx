@@ -8,7 +8,7 @@ import logo from "../../assets/images/nerd.png";
 import { useAuth } from "../../context/AuthContext"
 import { fetchInstitution } from "../../services/financeServices";
 
-export default function BankForm( styles ){
+export default function BankForm( { onFormSubmit } ){
 
     const { userInfo, loading } = useAuth()
     const [institutions, setInstitutions] = useState([])
@@ -53,6 +53,8 @@ export default function BankForm( styles ){
         try {
             await API["finance"].post("/bank_account/", formData);
             setFormData({ institution: '', account_type: '',});
+
+            onFormSubmit?.();
         } catch (err) {
             if (err.response?.data){
                 console.log(Object.values(err.response.data).flat().join(' '));

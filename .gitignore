@@ -197,3 +197,23 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Serverless/Deployment
+
+# Pasta de build e cache gerada pelo Serverless Framework
+# Contém o layer, o handler e as dependências (requirements)
+.serverless/
+
+# Excluir a pasta .serverless se ela estiver aninhada dentro da pasta 'backend'
+# Isso garante que a exclusão funcione independentemente de onde o Serverless
+# a cria (na raiz do projeto ou na pasta do serviço 'backend')
+backend/.serverless/
+
+# Excluir explicitamente a pasta node_modules (se o Serverless for usado lá)
+node_modules/
+
+# Arquivos de Build/Lock
+.requirements.zip
+backend/.requirements.zip
+package-lock.json
+backend/package.json

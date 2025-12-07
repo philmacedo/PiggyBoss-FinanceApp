@@ -10,7 +10,7 @@ import PinkButton from "../../components/PinkButton"
 import TransactionsView from "../../components/finance/TransactionsView"
 import Message from "../../components/Message"
 import NeedLogin from "../../components/NeedLogin"
-import { fetchTransactions } from "../../services/financeServices"
+import { fetchTransactions, deleteTransaction } from "../../services/financeServices"
 
 export default function Transactions() {
 
@@ -24,6 +24,9 @@ export default function Transactions() {
   const [cards, setCards] = useState([]);
   const [banks, setBanks] = useState([]);
   const [thirds, setThirds] = useState([]);
+  const [transactions, setTransactions] = useState([]);
+  const [hiddenTransactions, setHiddenTransactions] = useState([]);
+
   const [formData, setFormData] = useState({
     name: '',
     amount: '',
@@ -37,15 +40,10 @@ export default function Transactions() {
     description: ''
   });
 
-  useEffect(() => {
-    if (!userInfo && !loading) return
-    
-    fetchOptions()
-  }, [userInfo])
 
-
-  const fetchOptions = async () => {
+  const fetchData = async () => {
     try {
+      // Pedidos das opções dos dropdowns
       const [catRes, cardRes, bankRes, thirdRes] = await Promise.all([
         API["finance"].get("/category/"),
         API["finance"].get("/card/"),
@@ -58,21 +56,63 @@ export default function Transactions() {
       setBanks(bankRes.data);
       setThirds(thirdRes.data);
 
+      // Pedido das transações
+      const transactionsData = await fetchTransactions();
+      setTransactions(transactionsData);
+
     } catch (err) {
       if (err.response?.status === 401) {
-        setError("Session Expired.")
+        setError("Session Expired.");
       } else if (err.response?.data) {
         setError(Object.values(err.response.data).flat().join(' '));
       }
     }
   }
 
+
+  useEffect(() => {
+    if (!userInfo && !loading) return
+    
+    fetchData();
+  }, [userInfo])
+
+
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
+    const { name, value } = e.target;
+
+    setFormData(prevFormData => {
+      const newFormData = {
+        ...prevFormData,
+        [name]: value
+      };
+
+      // --- LÓGICA DE PREENCHIMENTO AUTOMÁTICO ---
+      // Se o campo alterado for 'card'
+      if (name === 'card') {
+        // Encontra o objeto 'card' completo na lista 'cards'
+        // Usamos 'value' (que é o ID do cartão)
+        const selectedCard = cards.find(c => c.id === parseInt(value));
+
+        // Se encontrarmos o cartão, definimos o 'bank'
+        if (selectedCard) {
+          // selectedCard.bank é o ID do banco
+          newFormData.bank = selectedCard.bank;
+        } else {
+          // Se o cartão for removido (ex: "Select a card"), limpa o banco
+          newFormData.bank = '';
+        }
+      }
+      // ------------------------------------
+
+      return newFormData;
     });
   };
+
+
+  function capitalize(str) {
+        if (!str) return '';
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -91,7 +131,7 @@ export default function Transactions() {
       setError('');
       setFormData({ name: '', amount: '', transactions_type: '', category: '', date: '', payment_method: '',
                   card: '', bank: '', third: '', description: '' });
-      fetchTransactions();
+      fetchData();
     } catch (err) {
         if (err.response?.data){
             setError(Object.values(err.response.data).flat().join(' '));
@@ -100,6 +140,25 @@ export default function Transactions() {
         }
       
         setSuccess('');
+    }
+  };
+
+
+  const handleHideTransaction = (id) => {
+    // Adiciona o ID à lista de transações ocultas
+    setHiddenTransactions(prev => [...prev, id]);
+  };
+
+  const handleDeleteTransaction = async (id) => {
+    // Pede confirmação ao utilizador (igual ao Budgets.jsx)
+    if (!window.confirm("Are you sure you want to delete this transaction?")) return;
+
+    try {
+      await deleteTransaction(id);
+      // Remove a transação do estado local para a UI atualizar
+      setTransactions(prev => prev.filter(tx => tx.id !== id));
+    } catch (err) {
+      setError("Failed to delete transaction.");
     }
   };
 
@@ -203,13 +262,19 @@ export default function Transactions() {
                       value={formData[select_field.name]}
                       onChange={handleChange}
                       required={select_field.required}
+
+                      disabled={select_field.name === 'bank' && formData.card}
+
                       >
                         <option value="" disabled >
                           {`${select_field.placeholder}`}
                         </option>
                         {select_field.options.map((option) => (
                           <option key={option.id} value={option.id}>
-                            {option.name || option.institution.name}
+                            {select_field.name === 'bank'
+                              ? `${option.institution?.name} - ${capitalize(option.account_type)}`
+                              : option.name
+                            }
                           </option>
                         ))}
                     </select>
@@ -235,7 +300,13 @@ export default function Transactions() {
 
 
       <PiggyBox style ={{ width : "50%", minwidth : "300px", height : "90%", minheight : "100px" }} >
-        <TransactionsView />
+        <TransactionsView 
+          transactions={transactions} 
+          hiddenTransactions={hiddenTransactions} // <-- ADICIONE ISTO
+          setHiddenTransactions={setHiddenTransactions} // <-- ADICIONE ISTO
+          onHide={handleHideTransaction} // <-- ADICIONE ISTO
+          onDelete={handleDeleteTransaction} // <-- ADICIONE ISTO
+        />
       </PiggyBox>
 
     </div>
