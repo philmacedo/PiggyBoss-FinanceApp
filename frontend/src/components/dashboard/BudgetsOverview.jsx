@@ -12,6 +12,13 @@ export default function BudgetsOverview() {
   const month = today.getMonth() + 1;
   const year = today.getFullYear();
 
+  // Função para calcular cor baseada na porcentagem
+  const getProgressColor = (percent) => {
+    if (percent > 100) return '#c0392b'; // Vermelho (Estourou)
+    if (percent > 80) return '#e67e22'; // Laranja (Alerta)
+    return '#2ecc71'; // Verde (OK)
+  }
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -36,21 +43,46 @@ export default function BudgetsOverview() {
       </div>
 
       <div className={styles["dashboard-content-invoices"]}>
-        {budgets.map((element, index) => (
-          <PiggyBox key = {index} to="/login" style = {{  width:"90%", height : "25%", background : "#16102f", flexDirection:"row", justifyContent : 'space-between', alignItems : 'center', padding : '5%' }}>
-            
-            <p>{element.category_name}</p>
-            <p>R$ {parseFloat(element.spent).toFixed(2)} / {parseFloat(element.limit_value).toFixed(2)}</p>
-          </PiggyBox>
-        ))}
+        {budgets.map((element, index) => {
+          const percent = Math.min((element.spent / element.limit_value) * 100, 100);
+
+          // ADICIONADO: return (...) para renderizar o JSX
+          return (
+            <PiggyBox key={index} style={{ width:"90%", height: "auto", background: "#16102f", padding: '15px', marginBottom: '10px' }}>
+              
+              {/* Header do item (Nome e Valor) */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginBottom: '5px' }}>
+                <p style={{ fontWeight: 'bold', textTransform: 'uppercase', fontSize: '0.9rem', margin: 0 }}>
+                    {element.category_name}
+                </p>
+                <p style={{ fontSize: '0.8rem', color: '#ccc', margin: 0 }}>
+                   R$ {parseFloat(element.spent).toFixed(0)} / {parseFloat(element.limit_value).toFixed(0)}
+                </p>
+              </div>
+
+              {/* Barra de Progresso */}
+              <div style={{ width: '100%', height: '8px', backgroundColor: '#333', borderRadius: '4px', overflow: 'hidden' }}>
+                <div style={{
+                  width: `${percent}%`,
+                  height: '100%',
+                  backgroundColor: getProgressColor(percent),
+                  transition: 'width 0.5s ease-in-out'
+                }}></div>
+              </div>
+
+            </PiggyBox>
+          );
+        })}
       </div>
       
+      {/* Rodapé com Total (Opcional, se quiser manter) */}
       <div style = {{ margin: '5%', width: '85%', height: '10%', display: 'flex', justifyContent : 'space-between', alignItems : 'center' }}>
         <p>Total</p>
         <p>R$ {totalSpent.toFixed(2)} / {totalBudgetsLimit.toFixed(2)}</p>
       </div>
+
     </PiggyBox>
-  )
+  );
 
   return BUDGETS_OVERVIEW;
 }

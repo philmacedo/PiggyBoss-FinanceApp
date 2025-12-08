@@ -58,7 +58,7 @@ export default function MonthSummary() {
                 <p>all banks</p>
             </div>
             <div className={styles["dashboard-content-expenses"]}>
-                <SimpleCard title="Balance" value={balance?.balance?.toFixed(2) || '0.00'} card_style={{ width: "90%", height: "80%"}} />
+                <SimpleCard title="Current Balance" value={balance?.balance?.toFixed(2) || '0.00'} card_style={{ width: "90%", height: "80%", background: "linear-gradient(135deg, #16102f 0%, #2c254a 100%)",borderLeft: "4px solid #f1109b"}} />
                 <SimpleCard title="Current Bills Total" value={billsTotal} card_style={{ width: "90%", height: "80%"}} />
                 <div className={styles["remaining"]}>
                     <p>Total Expenses</p>
