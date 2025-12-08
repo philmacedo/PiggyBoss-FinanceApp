@@ -13,7 +13,7 @@ export default function CategoriesForm( { onFormSubmit, onClose } ){
     const { userInfo } = useAuth()
     const [formData, setFormData] = useState({
         name: '',
-        color: '#FFFFFF',
+        color: '#ff00d4',
         balance_type: '',
     })
 
@@ -28,42 +28,21 @@ export default function CategoriesForm( { onFormSubmit, onClose } ){
 
         try {
             await API["finance"].post("/category/", formData)
-            setFormData({ name: '', color: '#FFFFFF', balance_type: ''})
+            setFormData({ name: '', color: '#ff00d4', balance_type: ''})
             onFormSubmit?.();
             onClose?.(); // Fecha ao salvar
         } catch (err) { console.log(err); }
     };
 
-    const SELECT_BASE_FIELDS = [
-        { label: "Color", name: "color", placeholder: "Select a color", required: true,
-        options: [
-            { value: "#0f0b1f", label: "Dark" },
-            { value: "#ff49b9", label: "Pink Piggy" },
-            { value: "#a70be8", label: "Purple Piggy" },
-            { value: "#f5f5f5", label: "White" },
-            { value: "#2ecc71", label: "Good Green" },
-            { value: "#c0392b", label: "Bad Red" },
-         ],
-        style: { width : "90%" } 
-        },
-        { label: "Category Type", name: "balance_type", placeholder: "Select a Category Type", required: true,
-        options: [ { value: "income", label: "Income" }, { value: "expense", label: "Expense" } ],
-        style: { width : "90%" }
-        }, 
-    ]
+    const TYPE_OPTIONS = [ 
+            { value: "income", label: "Income" }, 
+            { value: "expense", label: "Expense" } 
+        ];
 
     const backButtonStyle = {
-        position: 'absolute',
-        left: '20px',
-        top: '20px',
-        background: 'transparent',
-        border: '1px solid #FF66C4',
-        color: '#FF66C4',
-        padding: '5px 10px',
-        borderRadius: '5px',
-        cursor: 'pointer',
-        fontWeight: 'bold',
-        zIndex: 10
+        position: 'absolute', left: '20px', top: '20px', background: 'transparent',
+        border: '1px solid #FF66C4', color: '#FF66C4', padding: '5px 10px',
+        borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold', zIndex: 10
     };
 
     const CATEGORIES_FORM = (
@@ -104,16 +83,32 @@ export default function CategoriesForm( { onFormSubmit, onClose } ){
                     
                         <FormField key="name" name="name" label="Category Name" value={formData.name} onChange={handleChange} required={true} style={{ width : "90%", paddingTop: "5%" }} />
                         
-                        {SELECT_BASE_FIELDS.map((field) => (
-                            <FormField key={field.name} name={field.name} label={field.label} required={field.required} style={{ width : "90%", paddingTop: "5%" }}>
-                            <select name={field.name} value={formData[field.name]} onChange={handleChange} style={{ width: '100%', height: '2.5rem', fontSize: '1rem', padding: '0.25rem' }} required={field.required}>
-                                <option value="" disabled>{field.placeholder}</option>
-                                {field.options.map((opt) => (
+                        <div style={{ width: "90%", paddingTop: "5%", textAlign: "left" }}>
+                            <label style={{ display: "block", marginBottom: "0.5rem", color: "#ccc", fontSize: "0.9rem" }}>Color</label>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                <input 
+                                    type="color" 
+                                    name="color" 
+                                    value={formData.color} 
+                                    onChange={handleChange}
+                                    style={{
+                                        width: '50px', height: '40px', border: 'none', 
+                                        borderRadius: '5px', cursor: 'pointer', backgroundColor: 'transparent'
+                                    }} 
+                                />
+                                <span style={{ color: '#fff', fontSize: '0.9rem' }}>{formData.color}</span>
+                            </div>
+
+                            <FormField key="balance_type" name="balance_type" label="Category Type" required={true} style={{ width : "90%", paddingTop: "5%" }}>
+                                <select name="balance_type" value={formData.balance_type} onChange={handleChange} style={{ width: '100%', height: '2.5rem', fontSize: '1rem', padding: '0.25rem' }} required>
+                                    <option value="" disabled>Select a Category Type</option>
+                                    {TYPE_OPTIONS.map((opt) => (
                                     <option key={opt.value} value={opt.value}>{opt.label}</option>
-                                ))}
-                            </select>
+                                    ))}
+                                </select>
                             </FormField>
-                        ))}
+
+                        </div>
                     </div>
                 
                 <PinkButton text = "Add a Category" style = {{ width: "40%", margin: "5%" }}/>
