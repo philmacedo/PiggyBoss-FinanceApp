@@ -13,14 +13,14 @@ export default function NavBar(){
     };
 
     const NAVBAR = (
-        <nav>
+        <nav> 
             
                 {userInfo ? (
                     <div className={styles['left-side']}>
                         <Link to="/"> <img src={logo} alt="Logo" className={styles['logo']} /> </Link>
                         <Link to="/dashboard" className={styles['nav-link']}>Dashboard</Link>
-                        <Link to="/cardsandbanks" className={styles['nav-link']}>Cards And Banks</Link>
-                        <Link to="/transactions" className={styles['nav-link']}>Transactions</Link>
+                        <Link to="/cardsandbanks" className={styles['nav-link']}>Banks & Transactions</Link>
+                        
                         <Link to="/budgets" className={styles['nav-link']}>Budgets</Link>
                     </div>
                 ) : (

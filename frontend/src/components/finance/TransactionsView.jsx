@@ -1,147 +1,184 @@
-import { useAuth } from "../../context/AuthContext";
-import API from "../../utils/api";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import styles from "./TransactionsView.module.css";
-import * as financeServices from "../../services/financeServices"
 import SelectTabs from "../SelectTabs";
-import SelectButton from "../SelectButton";
 import Button from '@mui/material/Button';
 
-export default function TransactionsView({ bank = null, card = null, category = null, transactions = [], hiddenTransactions = [], onHide,onDelete,setHiddenTransactions }){
+export default function TransactionsView({ 
+    bank = null, 
+    card = null, 
+    category = null, 
+    transactions = [], 
+    hiddenTransactions = [], 
+    setHiddenTransactions, 
+    onHide, 
+    onDelete,
+    allCategories = [],
+    allCards = [],
+    allBanks = []
+}) {
 
-    const monthNames = [
-        "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
-        "Jul", "Ago", "Set", "Out", "Nov", "Dez"
-    ]
-
+    const monthNames = [ "Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez" ]
     const today = new Date()
     const currentMonthIndex = today.getMonth()
-    const currentYear = today.getFullYear()
-
     
     const [month, setMonth] = useState(monthNames[currentMonthIndex])
-    const [year, setYear] = useState(currentYear)
     const [type, setType] = useState(null)
-    const [method, setMethod] = useState(null)
 
-    const handleMonthSelect = (month) => {
-
-        const monthMap = {
-            Jan: 1, Fev: 2, Mar: 3, Abr: 4, Mai: 5, Jun: 6,
-            Jul: 7, Ago: 8, Set: 9, Out: 10, Nov: 11, Dez: 12
-        }
-
-        return monthMap[month]
-    }
-
-    //FUNÇÃO DE RESET
     const handleResetFilters = () => {
+        setMonth(monthNames[currentMonthIndex]);
         setType(null);
-        setMethod(null);
-        setHiddenTransactions([])
     };
 
+    const handleRestoreHidden = () => {
+        setHiddenTransactions([]); 
+    };
+
+    const getContrastColor = (hexColor) => {
+        if (!hexColor) return 'white';
+        const hex = hexColor.replace('#', '');
+        if (hex.length !== 6) return 'white';
+        const r = parseInt(hex.substr(0, 2), 16);
+        const g = parseInt(hex.substr(2, 2), 16);
+        const b = parseInt(hex.substr(4, 2), 16);
+        const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+        return (yiq >= 128) ? 'black' : 'white';
+    }
+
+    const resolveData = (data, list) => {
+        if (!data) return null;
+        if (typeof data === 'object') return data; 
+        return list.find(item => item.id === data); 
+    };
 
     const filteredTransactions = transactions.filter(tx => {
-        // console.log(tx) // (Pode manter os seus logs de debug se quiser)
-        // console.log(category)
-        // console.log(card)
-        // console.log(bank)
+        if (hiddenTransactions.includes(tx.id)) return false;
+
+        const txDate = new Date(tx.date);
+        const userTimezoneOffset = txDate.getTimezoneOffset() * 60000;
+        const adjustedDate = new Date(txDate.getTime() + userTimezoneOffset);
         
-        // A sua lógica de data correta (sem bug de fuso horário)
-        const dateParts = tx.date.split('-');
-        const txMonth = parseInt(dateParts[1]);
+        const txMonthIndex = adjustedDate.getMonth();
+        const targetMonthIndex = monthNames.indexOf(month);
 
-        // Filtros externos (props)
-        const bankFilter = !bank || tx.bank === bank.id;
-        const cardFilter = !card || tx.card === card.id;
-        const categoryFilter = !category || tx.category === category.id;
+        if (txMonthIndex !== targetMonthIndex) return false;
 
-        // Filtros internos (state)
-        const typeFilter = !type || tx.transactions_type === type;
-        const methodFilter = !method || tx.payment_method === method;
-        const isHidden = hiddenTransactions.includes(tx.id);
+        // --- CORREÇÃO DO ERRO DE NULL AQUI ---
+        // Verificamos se tx.bank/card/category existem antes de checar se são objetos
+        
+        if (bank && bank.length > 0) {
+             // Se tx.bank for null, txBankId será null. Se for objeto, pega o ID. Se for ID direto, usa ele.
+             const txBankId = (tx.bank && typeof tx.bank === 'object') ? tx.bank.id : tx.bank;
+             if (txBankId !== bank[0]?.id) return false;
+        }
+        if (card && card.length > 0) {
+             const txCardId = (tx.card && typeof tx.card === 'object') ? tx.card.id : tx.card;
+             if (txCardId !== card[0]?.id) return false;
+        }
+        if (category && category.length > 0) {
+             const txCatId = (tx.category && typeof tx.category === 'object') ? tx.category.id : tx.category;
+             if (txCatId !== category[0]?.id) return false;
+        }
 
-        return (
-            txMonth === handleMonthSelect(month) &&
-            bankFilter &&
-            cardFilter &&
-            categoryFilter &&
-            typeFilter &&
-            methodFilter &&
-            !isHidden
-        );
+        if (type && tx.transactions_type !== type) return false;
+
+        return true;
     });
-
-    const totalExpense = filteredTransactions
-        .filter(tx => tx.transactions_type === 'expense') // Filtra só despesas
-        .reduce((sum, tx) => sum + parseFloat(tx.amount), 0); // Soma
-
-    const totalIncome = filteredTransactions
-        .filter(tx => tx.transactions_type === 'income') // Filtra só receitas
-        .reduce((sum, tx) => sum + parseFloat(tx.amount), 0); // Soma
 
     const TRANSACTIONS_VIEW = (
         <>  
-            <div style={{ width: "100%", height: "8%", padding: "0% 1%", display : "flex", justifyContent: "space-between", alignItems: "center"}}>
-                <SelectTabs options={['expense', 'income']} onSelect={setType} value={type} styles={{ width: "35%" }} indicator={false} />
-                <h3>Transactions Resume</h3>
-                <SelectTabs options={['card', 'cash', 'pix']} onSelect={setMethod} value={method} styles={{ width: "35%" }} indicator={false} />
+            <div className={styles["top-header"]}>
+                <div className={styles["left-filters"]}>
+                    <button className={`${styles["filter-text-btn"]} ${type === 'expense' ? styles['active'] : ''}`} onClick={() => setType(type === 'expense' ? null : 'expense')}>Expense</button>
+                    <button className={`${styles["filter-text-btn"]} ${type === 'income' ? styles['active'] : ''}`} onClick={() => setType(type === 'income' ? null : 'income')}>Income (Credit)</button>
+                    
+                    {(type || month !== monthNames[currentMonthIndex]) && (
+                        <button onClick={handleResetFilters} className={styles["reset-btn"]}>Reset</button>
+                    )}
+
+                    {hiddenTransactions.length > 0 && (
+                        <button 
+                            onClick={handleRestoreHidden} 
+                            className={styles["reset-btn"]}
+                            style={{ marginLeft: '10px', color: '#d946ef', borderColor: '#d946ef' }}
+                        >
+                            Restore Hidden ({hiddenTransactions.length})
+                        </button>
+                    )}
+                </div>
+
+                <h3 className={styles["table-title"]}>Transactions</h3>
+                
+                <div className={styles["right-filters"]}>
+                    <select className={styles["month-select"]} value={month} onChange={(e) => setMonth(e.target.value)}>
+                        {monthNames.map(m => (<option key={m} value={m}>{m}</option>))}
+                    </select>
+                </div>
             </div>
-            
-            <SelectTabs options={monthNames} onSelect={setMonth} value={month}/>
 
-            <Button 
-                onClick={handleResetFilters} 
-                sx={{ color: '#FF66C4', margin: '10px 0', alignSelf: 'center' }}
-            >
-                Resetar Filtros
-            </Button>
+            <div className={styles["table-container"]}>
+                <table className={styles["transactions-table"]}>
+                    <thead className={styles["transactions-header"]}>
+                        <tr>
+                            <th>date</th>
+                            <th>account</th>
+                            <th>transaction</th>
+                            <th>category</th>
+                            <th>description</th>
+                            <th>value</th>
+                            <th style={{textAlign: 'right'}}>actions</th> 
+                        </tr>
+                    </thead>
+                    <tbody className={styles["transactions-body"]}>
+                        {filteredTransactions.length === 0 ? (
+                            <tr className={styles["no-transactions"]}><td colSpan="7">No transactions found.</td></tr>
+                        ) : (
+                            filteredTransactions.map((tx) => {
+                                const categoryData = resolveData(tx.category, allCategories);
+                                const cardData = resolveData(tx.card, allCards);
+                                const bankData = resolveData(tx.bank, allBanks);
+                                
+                                const badgeColor = categoryData?.color || '#333';
+                                const badgeTextColor = getContrastColor(badgeColor);
 
-            <ul className={styles["transactions-list"]}>
-            {filteredTransactions.map((tx) => (
-                <li key={tx.id} className={styles["transaction-item"]} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0' }}>
-                    <span style={{ flex: 2, paddingLeft: '10px' }}><strong>{tx.name}</strong></span>
-                    <span style={{ flex: 1, textAlign: 'center' }}>R$ {parseFloat(tx.amount).toFixed(2)}</span>
-                    <span style={{ flex: 1, textAlign: 'center' }}>{tx.transactions_type}</span>
-                    <span style={{ flex: 1, textAlign: 'center'}}>{tx.payment_method}</span>
-                    <span style={{ flex: 1, textAlign: 'center' }}>{tx.date}</span>
-                    <span style={{ flex: 1, textAlign: 'center', display: 'flex', justifyContent: 'center', gap: '5px' }}>
-                        <button 
-                            className={styles["hide-button"]} 
-                            onClick={() => onHide(tx.id)}
-                            title="Hide"
-                        >
-                            Hide
-                        </button>
-                        <span> • </span>
-                        <button 
-                            className={styles["delete-button"]} 
-                            onClick={() => onDelete(tx.id)}
-                            title="Delete"
-                        >
-                            Delete
-                        </button>
-                    </span>
-                </li>
-            ))}
-            </ul>
-
-            <div style={{ width: "90%", display: "flex", justifyContent: "space-between" }}>
-                <div style={{ textAlign: "left" }}>
-                    <p style={{ margin: 0, fontSize: '0.9rem', color: '#c0392b' }}>Total Expense:</p>
-                    <p style={{ margin: 0, fontSize: '1.2rem', fontWeight: 'bold' }}>
-                        $ {totalExpense.toFixed(2)}
-                    </p>
-                </div>
-
-                {/* Total de Receitas (Income) */}
-                <div style={{ textAlign: "right" }}>
-                    <p style={{ margin: 0, fontSize: '0.9rem', color: '#2ecc71' }}>Total Income:</p>
-                    <p style={{ margin: 0, fontSize: '1.2rem', fontWeight: 'bold' }}>
-                        $ {totalIncome.toFixed(2)}
-                    </p>
-                </div>
+                                return (
+                                <tr key={tx.id} className={styles["transaction-row"]}>
+                                    <td className={styles["date-cell"]}>{new Date(tx.date).toLocaleDateString('pt-BR')}</td> 
+                                    
+                                    <td>{bankData?.institution?.name || cardData?.name || 'Cash/Pix'}</td> 
+                                    
+                                    <td style={{ fontWeight: 'bold' }}>{tx.name}</td> 
+                                    
+                                    <td className={styles["category-cell"]}>
+                                        <span style={{ 
+                                            backgroundColor: badgeColor, 
+                                            color: badgeTextColor, 
+                                            padding: '4px 8px', 
+                                            borderRadius: '12px', 
+                                            display: 'inline-block', 
+                                            fontSize: '0.8em', 
+                                            textTransform: 'uppercase', 
+                                            fontWeight: 'bold',
+                                            boxShadow: badgeTextColor === 'black' ? 'none' : '0 0 2px rgba(0,0,0,0.5)'
+                                        }}>
+                                            {categoryData?.name || 'N/A'} 
+                                        </span>
+                                    </td> 
+                                    
+                                    <td className={styles["desc-cell"]}>{tx.description || '-'}</td>
+                                    
+                                    <td className={tx.transactions_type === 'expense' ? styles['expense'] : styles['income']}>
+                                        $ {parseFloat(tx.amount).toFixed(2)}
+                                    </td>
+                                    
+                                    <td className={styles["actions-cell"]}>
+                                        <span onClick={() => onHide(tx.id)} className={styles["action-icon"]} title="Hide"> E </span>
+                                        <span onClick={() => onDelete(tx.id)} className={styles["action-icon"]} title="Delete"> X </span>
+                                    </td>
+                                </tr>
+                            )})
+                        )}
+                    </tbody>
+                </table>
             </div>
         </>
     )

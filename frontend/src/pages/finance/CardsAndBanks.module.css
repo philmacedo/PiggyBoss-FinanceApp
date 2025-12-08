@@ -1,24 +1,119 @@
-
 .cardsandbanks {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     height: 95%;
+    width: 100%;
+    gap: 20px;
+    padding: 20px;
+    background-color: transparent; /* O fundo geral vem do body/pai */
 }
 
 .sidebar {
-    width: 30%;
-    height: 90%;
+    width: 300px;
+    height: 95%;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
+    gap: 20px;
+    flex-shrink: 0;
+    overflow-y: auto;
 }
 
 .content {
-    width: 70%;
-    height: 100%;
+    flex-grow: 1;
+    height: 95%;
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+}
+
+/* --- ESTILO DO CONTAINER DA TABELA (Igual a imagem) --- */
+.transactions-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    /* Borda roxa fina e cantos arredondados */
+    border: 1px solid #d946ef; 
+    border-radius: 20px;
+    overflow: hidden;
+    /* Fundo bem escuro (quase preto/roxo) */
+    background-color: #0f0b18; 
+    padding: 20px;
+    box-shadow: 0 0 15px rgba(217, 70, 239, 0.1);
+}
+
+.transactions-table-view {
+    flex-grow: 1;
+    overflow-y: auto;
+    /* Custom Scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: #d946ef transparent;
+}
+
+/* --- RODAPÉ (Botão Add e Total) --- */
+.transactions-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    margin-top: 10px;
+    /* Sem borda superior na imagem, apenas espaçamento */
+}
+
+.add-button {
+    background-color: transparent;
+    color: white;
+    padding: 5px 25px;
+    border: 1px solid #d946ef; /* Borda rosa no botão */
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.add-button:hover {
+    background-color: #d946ef;
+    color: white;
+}
+
+/* --- FORMULÁRIO (Mantido para não quebrar) --- */
+.form-container {
+    height: 90%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: min-content;
+    gap: 15px;
+    place-items: center;
+    margin-bottom: 20px;
+}
+
+.form-header-wrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.form-back-button {
+    position: absolute;
+    top: 0;
+    left: 10px;
+    background: transparent;
+    border: 1px solid #FF66C4;
+    color: #FF66C4;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.logo {
+    max-height: 100px;
+    object-fit: contain;
+    margin-bottom: 1rem;
 }

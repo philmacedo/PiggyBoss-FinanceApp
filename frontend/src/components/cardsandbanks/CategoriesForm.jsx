@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import FormField from "../../components/FormField";
 import PiggyBox from "../PiggyBox";
 import PinkButton from "../PinkButton";
@@ -7,11 +7,10 @@ import Image from "../Image";
 import logo from "../../assets/images/nerd.png";
 import { useAuth } from "../../context/AuthContext"
 
+// Adicionamos a prop 'onClose' aqui
+export default function CategoriesForm( { onFormSubmit, onClose } ){
 
-export default function CategoriesForm( { onFormSubmit } ){
-
-    const { userInfo, loading } = useAuth()
-    const [banks, setBanks] = useState([])
+    const { userInfo } = useAuth()
     const [formData, setFormData] = useState({
         name: '',
         color: '#FFFFFF',
@@ -19,41 +18,20 @@ export default function CategoriesForm( { onFormSubmit } ){
     })
 
     const handleChange = (e) => {
-        setFormData({
-        ...formData,
-        [e.target.name]: e.target.value
-        });
+        setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-      
-        // Verifica se 'name' não está vazio e se 'balance_type' foi selecionado.
-        if (!formData.name || formData.name.trim() === '') {
-            console.log("Validação falhou: Name é obrigatório.");
-            return;
-        }
-        if (!formData.balance_type) {
-            console.log("Validação falhou: Category Type é obrigatório.");
-            return;
-        }
+        if (!formData.name || formData.name.trim() === '') return;
+        if (!formData.balance_type) return;
 
         try {
             await API["finance"].post("/category/", formData)
             setFormData({ name: '', color: '#FFFFFF', balance_type: ''})
-
             onFormSubmit?.();
-
-        } catch (err) {
-            if (err.response?.data){
-                console.log(Object.values(err.response.data).flat().join(' '));
-            } else{
-                console.log('Error adding category');
-            }
-        
-            
-        }
+            onClose?.(); // Fecha ao salvar
+        } catch (err) { console.log(err); }
     };
 
     const SELECT_BASE_FIELDS = [
@@ -69,13 +47,24 @@ export default function CategoriesForm( { onFormSubmit } ){
         style: { width : "90%" } 
         },
         { label: "Category Type", name: "balance_type", placeholder: "Select a Category Type", required: true,
-        options: [
-            { value: "income", label: "Income" }, 
-            { value: "expense", label: "Expense" },
-        ],
+        options: [ { value: "income", label: "Income" }, { value: "expense", label: "Expense" } ],
         style: { width : "90%" }
         }, 
     ]
+
+    const backButtonStyle = {
+        position: 'absolute',
+        left: '20px',
+        top: '20px',
+        background: 'transparent',
+        border: '1px solid #FF66C4',
+        color: '#FF66C4',
+        padding: '5px 10px',
+        borderRadius: '5px',
+        cursor: 'pointer',
+        fontWeight: 'bold',
+        zIndex: 10
+    };
 
     const CATEGORIES_FORM = (
             <PiggyBox 
@@ -87,7 +76,14 @@ export default function CategoriesForm( { onFormSubmit } ){
                     flexDirection : "column",
                     justifyContent : "flex-start",
                     alignItems : "center",
+                    position: "relative"
                     }}>
+                
+                {/* Botão de Voltar */}
+                <button onClick={onClose} style={backButtonStyle}>
+                    &larr; Voltar
+                </button>
+
                 <div style={{ height: '20%', margin: '5% 0 0 0' }}> 
                     <Image scr = {logo} />
                 </div>
@@ -106,49 +102,14 @@ export default function CategoriesForm( { onFormSubmit } ){
 
                     <div style={{ display: 'flex', flexDirection: "column", justifyContent: 'space-around', alignItems: 'center', width: '100%', height: '100%'}}>
                     
-                        <FormField
-                            key="name"
-                            name="name"
-                            label="Category Name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            required={true}
-                            style={{
-                                width : "90%",
-                                paddingTop: "5%",
-                            }}
-                        >
-                        </FormField>
+                        <FormField key="name" name="name" label="Category Name" value={formData.name} onChange={handleChange} required={true} style={{ width : "90%", paddingTop: "5%" }} />
+                        
                         {SELECT_BASE_FIELDS.map((field) => (
-                            <FormField
-                            key={field.name}
-                            name={field.name}
-                            label={field.label}
-                            required={field.required}
-                            style={{
-                                width : "90%",
-                                paddingTop: "5%",
-                            }}
-                            >
-                            <select
-                                name={field.name}
-                                value={formData[field.name]}
-                                onChange={handleChange}
-                                style={{
-                                width: '100%',
-                                height: '2.5rem',
-                                fontSize: '1rem',
-                                padding: '0.25rem',
-                                }}
-                                required={field.required}
-                                >
-                                <option value="" disabled>
-                                    {field.placeholder}
-                                </option>
+                            <FormField key={field.name} name={field.name} label={field.label} required={field.required} style={{ width : "90%", paddingTop: "5%" }}>
+                            <select name={field.name} value={formData[field.name]} onChange={handleChange} style={{ width: '100%', height: '2.5rem', fontSize: '1rem', padding: '0.25rem' }} required={field.required}>
+                                <option value="" disabled>{field.placeholder}</option>
                                 {field.options.map((opt) => (
-                                    <option key={opt.value} value={opt.value}>
-                                    {opt.label}
-                                    </option>
+                                    <option key={opt.value} value={opt.value}>{opt.label}</option>
                                 ))}
                             </select>
                             </FormField>

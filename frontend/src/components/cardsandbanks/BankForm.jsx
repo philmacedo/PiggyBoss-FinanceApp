@@ -8,7 +8,8 @@ import logo from "../../assets/images/nerd.png";
 import { useAuth } from "../../context/AuthContext"
 import { fetchInstitution } from "../../services/financeServices";
 
-export default function BankForm( { onFormSubmit } ){
+// Adicionamos a prop 'onClose' aqui
+export default function BankForm( { onFormSubmit, onClose } ){
 
     const { userInfo, loading } = useAuth()
     const [institutions, setInstitutions] = useState([])
@@ -21,7 +22,6 @@ export default function BankForm( { onFormSubmit } ){
     const fetchData = async () => {
         try {
             const getInstitutions = await fetchInstitution()
-            // console.log(getInstitutions)
             setInstitutions(getInstitutions)
         } catch (err) {
             console.log(err)
@@ -30,7 +30,6 @@ export default function BankForm( { onFormSubmit } ){
 
     useEffect(() => {
         if (!userInfo && !loading) return
-        
         fetchData()
       }, [userInfo])
 
@@ -43,25 +42,33 @@ export default function BankForm( { onFormSubmit } ){
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         const requiredFields = ['institution', 'account_type'];
         const isValid = requiredFields.every(field => formData[field].trim() !== '');
-        if (!isValid) {
-            return;
-        }
+        if (!isValid) return;
 
         try {
             await API["finance"].post("/bank_account/", formData);
             setFormData({ institution: '', account_type: '',});
-
             onFormSubmit?.();
+            onClose?.(); // Fecha ao salvar com sucesso
         } catch (err) {
-            if (err.response?.data){
-                console.log(Object.values(err.response.data).flat().join(' '));
-            } else{
-                console.log('Error adding bank_account');
-            }
+            console.log(err);
         }
+    };
+
+    // Estilo do botão de voltar
+    const backButtonStyle = {
+        position: 'absolute',
+        left: '20px',
+        top: '20px',
+        background: 'transparent',
+        border: '1px solid #FF66C4',
+        color: '#FF66C4',
+        padding: '5px 10px',
+        borderRadius: '5px',
+        cursor: 'pointer',
+        fontWeight: 'bold',
+        zIndex: 10
     };
 
     const BANK_FORM = (
@@ -74,7 +81,14 @@ export default function BankForm( { onFormSubmit } ){
                     flexDirection : "column",
                     justifyContent : "flex-start",
                     alignItems : "center",
+                    position: "relative" // Importante para o botão absoluto
                     }}>
+                
+                {/* Botão de Voltar */}
+                <button onClick={onClose} style={backButtonStyle}>
+                    &larr; Voltar
+                </button>
+
                 <div style={{ height: '25%', margin: '5% 0 0 0' }}> 
                     <Image scr = {logo} />
                 </div>
@@ -91,55 +105,19 @@ export default function BankForm( { onFormSubmit } ){
                         gap: "5%"
                     }}>
                     <div style={{ display: 'flex', flexDirection: "column", justifyContent: 'space-around', alignItems: 'center', width: '100%', height: '100%'}}>
-                        <FormField
-                        key="institution"
-                        name="institution"
-                        label="Institution"
-                        required={true}
-                        style={{
-                            width : "90%",
-                            paddingBottom: "5%",
-                        }}
-                        >
-                        <select
-                            name="institution"
-                            value={formData["institution"]}
-                            onChange={handleChange}
-                            required={true}
-                            >
-                            <option value="" disabled>
-                                Select a institution
-                            </option>
-                            
+                        <FormField key="institution" name="institution" label="Institution" required={true} style={{ width : "90%", paddingBottom: "5%" }}>
+                        <select name="institution" value={formData["institution"]} onChange={handleChange} required={true}>
+                            <option value="" disabled>Select a institution</option>
                             {institutions.map((opt) => (
-                                <option key={opt.id} value={opt.id}>
-                                    {opt.name}
-                                </option>
+                                <option key={opt.id} value={opt.id}>{opt.name}</option>
                             ))}
                         </select>
                         </FormField>
-                        <FormField
-                            key = "account_type"
-                            name = "account_type"
-                            label = "Account Type"
-                            required= {true}
-                            style={{
-                                width : "90%"
-                            }}
-                            >
-                            <select
-                                name="account_type"
-                                value={formData["account_type"]}
-                                onChange={handleChange}
-                                required={true}
-                                >
-                                <option value="" disabled>
-                                    "Select a Account Type"
-                                </option>
+                        <FormField key = "account_type" name = "account_type" label = "Account Type" required= {true} style={{ width : "90%" }}>
+                            <select name="account_type" value={formData["account_type"]} onChange={handleChange} required={true}>
+                                <option value="" disabled>"Select a Account Type"</option>
                                 {account_typeOptions.map((opt) => (
-                                    <option key={opt} value={opt}>
-                                        {opt}
-                                    </option>
+                                    <option key={opt} value={opt}>{opt}</option>
                                 ))}
                             </select>
                         </FormField>
