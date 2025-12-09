@@ -23,7 +23,6 @@ This project aims to learn and apply real practices of REST API, database modeli
 
 ### Dashboard
 
-![dashboard](https://github.com/user-attachments/assets/9b697915-3164-4a3a-9e2f-a0722d961609)
 <img width="1914" height="949" alt="Captura de tela 2025-12-09 110335" src="https://github.com/user-attachments/assets/58156474-b62f-4ec5-9e90-01970df2a630" />
 
 ### Sign in
