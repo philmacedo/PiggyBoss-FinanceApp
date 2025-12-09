@@ -155,3 +155,47 @@
 .category-cell {
     /* Estilos base da célula, se necessário */
 }
+
+.table-container {
+    width: 100%;
+    flex-grow: 1;
+    overflow-y: auto; /* Scroll Vertical */
+    
+    /* ADICIONADO: Scroll Horizontal */
+    overflow-x: auto; 
+    -webkit-overflow-scrolling: touch; /* Scroll suave no iOS */
+}
+
+.transactions-table {
+    width: 100%;
+    border-collapse: collapse; 
+    text-align: left;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.85rem;
+
+    min-width: 800px; 
+}
+
+/* Ajustes no cabeçalho para mobile */
+@media (max-width: 600px) {
+    .top-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+
+    .left-filters {
+        flex-wrap: wrap; /* Permite que os filtros quebrem linha */
+    }
+
+    .table-title {
+        position: static;
+        transform: none;
+        margin: 10px 0;
+    }
+
+    .right-filters {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}

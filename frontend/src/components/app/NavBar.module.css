@@ -87,3 +87,40 @@ nav {
 .logout-button:hover {
   background-color: #444;
 }
+
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column; 
+        height: auto;
+        padding: 10px;
+    }
+
+    .left-side {
+        width: 100%;
+        justify-content: center; 
+        flex-wrap: wrap; 
+        margin-bottom: 10px;
+    }
+
+    .right-side {
+        width: 100%;
+        justify-content: center;
+        margin-top: 5px;
+    }
+
+  
+    .nav-link {
+        font-size: 0.9rem;
+        margin: 0 8px; /* Espaçamento menor */
+    }
+
+    .logo {
+        height: 40px; /* Logo menor */
+        margin-right: 10px;
+    }
+
+    .user-info {
+        font-size: 0.9rem;
+        margin: 0 8px;
+    }
+}

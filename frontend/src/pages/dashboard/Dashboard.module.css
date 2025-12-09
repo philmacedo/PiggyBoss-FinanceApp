@@ -14,3 +14,45 @@
     width: 100%;
     height: 100%;
 }
+
+@media (max-width: 1024px) {
+    .dashboard {
+        display: flex;
+        flex-direction: column; 
+        height: auto; 
+        padding: 15px;
+        gap: 30px;
+        overflow-y: visible; 
+    }
+
+    .dashboard-item {
+        flex-direction: column; 
+        height: auto;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
+
+    .dashboard-item > div {
+        width: 100% !important;
+        min-width: 0 !important;
+        height: auto !important;
+        min-height: 400px; 
+    }
+
+    /* Ajustes específicos para o conteúdo interno */
+    .dashboard-head {
+        padding: 10px;
+        flex-direction: column;
+        align-items: flex-start;
+        height: auto;
+    }
+
+    .dashboard-content-expenses {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        gap: 20px;
+        padding-bottom: 20px;
+    }
+}
