@@ -60,7 +60,7 @@ export default function CategoriesForm( { onFormSubmit, onClose } ){
                 
                 {/* Botão de Voltar */}
                 <button onClick={onClose} style={backButtonStyle}>
-                    &larr; Voltar
+                    &larr; Back
                 </button>
 
                 <div style={{ height: '20%', margin: '5% 0 0 0' }}> 

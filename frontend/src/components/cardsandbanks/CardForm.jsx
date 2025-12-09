@@ -77,7 +77,7 @@ export default function CardForm({ onFormSubmit, onClose }){
                 
                 {/* Botão de Voltar */}
                 <button onClick={onClose} style={backButtonStyle}>
-                    &larr; Voltar
+                    &larr; Back
                 </button>
 
                 <div style={{ height: '25%', margin: '5% 0 0 0' }}> 
