@@ -117,3 +117,47 @@
     object-fit: contain;
     margin-bottom: 1rem;
 }
+
+
+@media (max-width: 900px) {
+    .cardsandbanks {
+        flex-direction: column; /* Coloca Sidebar em cima e Content embaixo */
+        height: auto;
+        overflow-y: auto; /* Scroll na página inteira */
+        padding: 10px;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        flex-direction: row; /* Cards lado a lado */
+        overflow-x: auto; /* Scroll horizontal nos cards */
+        padding-bottom: 10px;
+        flex-shrink: 0;
+    }
+
+    /* Ajuste para os SelectBox dentro da sidebar no mobile */
+    .sidebar > div {
+        min-width: 280px; /* Garante que os cards não fiquem espremidos */
+        height: 250px !important; 
+        margin-right: 15px;
+    }
+
+    .content {
+        width: 100%;
+        height: auto;
+        min-height: 500px; /* Garante espaço para a tabela */
+    }
+
+    /* Transforma o formulário de 2 colunas em 1 coluna */
+    .form-container {
+        grid-template-columns: 1fr; 
+        display: flex;
+        flex-direction: column;
+    }
+    
+    /* Ajustes no Formulário */
+    .form-header-wrapper h3 {
+        font-size: 1.5rem !important; /* Diminui a fonte do título */
+    }
+}

@@ -83,3 +83,60 @@
     align-items: center;
     gap: 5%;
 }
+
+@media (max-width: 1024px) {
+    .dashboard-head {
+        display: flex;
+        flex-direction: column; /* Empilha os blocos */
+        height: auto; /* Permite que a página cresça com o scroll */
+        padding: 10px;
+        gap: 30px;
+    }
+
+    .dashboard-item {
+        flex-direction: column; /* Empilha o conteúdo interno (ex: ExpenseManager e BanksList) */
+        height: auto;
+        gap: 20px;
+    }
+
+    /* Força os componentes PiggyBox a ocuparem a largura total */
+    .dashboard-item > div {
+        width: 100% !important;
+        min-width: 0 !important; /* Remove travas de largura mínima */
+        height: 400px !important; /* Altura fixa confortável para mobile */
+    }
+
+    /* Ajuste específico para o sumário de despesas */
+    .dashboard-content-expenses {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        gap: 15px;
+        padding-bottom: 20px;
+    }
+    
+    .dashboard-content-expense {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        gap: 15px;
+        padding-bottom: 20px;
+        
+    }
+
+    .dashboard-content-expenses-planning {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        gap: 15px;
+        padding-bottom: 20px;
+    }
+
+    .dashboard-content-invoices {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        gap: 15px;
+        padding-bottom: 20px;
+    }
+}

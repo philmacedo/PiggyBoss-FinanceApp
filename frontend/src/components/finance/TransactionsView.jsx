@@ -62,11 +62,7 @@ export default function TransactionsView({
 
         if (txMonthIndex !== targetMonthIndex) return false;
 
-        // --- CORREÇÃO DO ERRO DE NULL AQUI ---
-        // Verificamos se tx.bank/card/category existem antes de checar se são objetos
-        
         if (bank && bank.length > 0) {
-             // Se tx.bank for null, txBankId será null. Se for objeto, pega o ID. Se for ID direto, usa ele.
              const txBankId = (tx.bank && typeof tx.bank === 'object') ? tx.bank.id : tx.bank;
              if (txBankId !== bank[0]?.id) return false;
         }
@@ -121,6 +117,7 @@ export default function TransactionsView({
                         <tr>
                             <th>date</th>
                             <th>account</th>
+                            <th>method</th> {/* <--- ADICIONADO AQUI */}
                             <th>transaction</th>
                             <th>category</th>
                             <th>description</th>
@@ -130,7 +127,7 @@ export default function TransactionsView({
                     </thead>
                     <tbody className={styles["transactions-body"]}>
                         {filteredTransactions.length === 0 ? (
-                            <tr className={styles["no-transactions"]}><td colSpan="7">No transactions found.</td></tr>
+                            <tr className={styles["no-transactions"]}><td colSpan="8">No transactions found.</td></tr> // Ajustado colSpan para 8
                         ) : (
                             filteredTransactions.map((tx) => {
                                 const categoryData = resolveData(tx.category, allCategories);
@@ -146,6 +143,11 @@ export default function TransactionsView({
                                     
                                     <td>{bankData?.institution?.name || cardData?.name || 'Cash/Pix'}</td> 
                                     
+                                    {/* <--- CÉLULA NOVA: Payment Method ---> */}
+                                    <td style={{ textTransform: 'capitalize', color: '#aaa' }}>
+                                        {tx.payment_method}
+                                    </td>
+
                                     <td style={{ fontWeight: 'bold' }}>{tx.name}</td> 
                                     
                                     <td className={styles["category-cell"]}>

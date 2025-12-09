@@ -84,8 +84,28 @@ body {
 }
 
 /* Responsivo */
-@media (prefers-reduced-motion: no-preference) {
+/*@media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
   }
+}*/
+
+@media (max-width: 600px) {
+    .top-header {
+        flex-direction: column; /* Empilha filtros e mês */
+        gap: 15px;
+        align-items: flex-start;
+    }
+
+    .table-title {
+        position: static; /* Remove o posicionamento absoluto do título */
+        transform: none;
+        align-self: center;
+        margin: 10px 0;
+    }
+
+    .left-filters, .right-filters {
+        width: 100%;
+        justify-content: space-between;
+    }
 }
