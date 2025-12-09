@@ -8,6 +8,7 @@ export default function SelectBox({
     titlebuttonlabel, 
     titlebuttoncallback, 
     selectcallback, 
+    deletecallback,
     cardstyle, 
     displayKey, // Chave para exibir o nome (ex: "name")
     displayFn,  // Função opcional para exibir nome complexo
@@ -31,7 +32,7 @@ export default function SelectBox({
         return item; // Fallback se for string simples
     }
 
-    return (
+return (
         <Card sx={{ backgroundColor: "#16102f", borderRadius: "15px", color: 'white', ...cardstyle }}>
             <CardContent style={{ height: "100%", padding: "10px" }}>
                 
@@ -48,29 +49,54 @@ export default function SelectBox({
                             <ListItemButton
                                 key={index}
                                 selected={selected === index}
-                                onClick={() => selectcallback(option)} // Passa o objeto para o pai decidir a lógica
+                                onClick={() => selectcallback(option)} 
                                 sx={{
                                     borderRadius: "10px",
                                     backgroundColor: selected === index ? '#f1109b' : 'rgba(255, 255, 255, 0.05)',
                                     '&:hover': { backgroundColor: selected === index ? '#f1109b' : 'rgba(255, 255, 255, 0.1)' },
                                     '&.Mui-selected': { backgroundColor: '#f1109b' },
-                                    '&.Mui-selected:hover': { backgroundColor: '#f1109b' }, // Mantém a cor ao passar mouse se selecionado
+                                    '&.Mui-selected:hover': { backgroundColor: '#f1109b' },
                                     marginTop: "5px",
                                     padding: "8px 10px",
+                                    // Flexbox para separar texto do botão X
+                                    display: 'flex', 
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center'
                                 }}
                             >
-                                {colorKey && option[colorKey] && (
-                                    <span style={{ color: option[colorKey], fontSize: '1.5em', marginRight: '10px', lineHeight: '0', textShadow: '0 0 5px rgba(0,0,0,0.5)' }}>&#9679;</span>
-                                )}
-                                <ListItemText 
-                                    primary={getName(option)} 
-                                    primaryTypographyProps={{ color: 'white', fontSize: '0.9rem' }}
-                                />
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    {colorKey && option[colorKey] && (
+                                        <span style={{ color: option[colorKey], fontSize: '1.5em', marginRight: '10px', lineHeight: '0', textShadow: '0 0 5px rgba(0,0,0,0.5)' }}>&#9679;</span>
+                                    )}
+                                    <ListItemText 
+                                        primary={getName(option)} 
+                                        primaryTypographyProps={{ color: 'white', fontSize: '0.9rem' }}
+                                    />
+                                </div>
+
+                                {/* BOTÃO DE DELETAR (X) */}
+                                <span 
+                                    onClick={(e) => { 
+                                        e.stopPropagation(); // Impede que selecione ao deletar
+                                        if(deletecallback) deletecallback(option); 
+                                    }}
+                                    style={{ 
+                                        color: '#ff4c4c', 
+                                        fontWeight: 'bold', 
+                                        fontSize: '1rem', 
+                                        cursor: 'pointer',
+                                        paddingLeft: '10px'
+                                    }}
+                                    title="Delete"
+                                >
+                                    ✕
+                                </span>
+
                             </ListItemButton>
                         ))}
                     </List>
                 </div>
             </CardContent>
         </Card>
-    ); 
+    );
 };

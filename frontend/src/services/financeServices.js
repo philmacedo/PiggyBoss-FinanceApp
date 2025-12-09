@@ -56,3 +56,33 @@ export const deleteTransaction = async (id) => {
     return null;
   }
 };
+
+export const deleteBank = async (id) => {
+    try {
+        const { data } = await API['finance'].delete(`/bank_account/${id}/`);
+        return data;
+    } catch (err) {
+        console.error("Failed to delete bank", err);
+        throw err;
+    }
+};
+
+export const deleteCard = async (id) => {
+    try {
+        const { data } = await API['finance'].delete(`/card/${id}/`);
+        return data;
+    } catch (err) {
+        console.error("Failed to delete card", err);
+        throw err;
+    }
+};
+
+export const deleteCategory = async (id) => {
+    try {
+        const { data } = await API['finance'].delete(`/category/${id}/`);
+        return data;
+    } catch (err) {
+        console.error("Failed to delete category", err);
+        throw err;
+    }
+};
