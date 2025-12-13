@@ -33,12 +33,11 @@ This project aims to learn and apply real practices of REST API, database modeli
 
 ![register-page](https://github.com/user-attachments/assets/b3c7de2e-22a3-4c79-8461-f39514e38633)
 
-### Create and View Transactions
+### Banks and Transactions (Filter transactions by cards, categories, payment method and more!)
+<img width="1907" height="936" alt="Captura de tela 2025-12-09 110620" src="https://github.com/user-attachments/assets/0df767ed-22f1-4def-9928-9a03bd604a1b" />
 
-<img width="1899" height="951" alt="image (2)" src="https://github.com/user-attachments/assets/d47547a2-8cfd-4a8b-a5ce-803241c7ed4b" />
-
-### Cards and Banks (Filter transactions by cards, categories, payment method and more!)
-<img width="1905" height="949" alt="image" src="https://github.com/user-attachments/assets/e96d7928-b753-4d79-8d2f-69bfc75961da" />
+### Add Transactions
+<img width="1885" height="949" alt="Captura de tela 2025-12-13 120656" src="https://github.com/user-attachments/assets/50a71b55-0495-47d8-a4f4-35dd7d3fec96" />
 
 # Future Improvements
 This was the initial phase of the project to deliver the assignment for the UERJ course. From this point on, the project will be revamped aiming at current React design patterns and a restructuring for better code understanding and modularity, as well as the delivery of new features.
