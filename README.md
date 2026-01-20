@@ -53,3 +53,7 @@ A preview of the new layout, designed on Figma:
 <img width="2732" height="1536" alt="image" src="https://github.com/user-attachments/assets/5869ff01-ec63-4d44-b462-54f98908b3fc" />
 
 **And much more!!! 🚀**
+
+## 👨‍💻 Autor
+**Bruno Reis** Systems and Computer Engineering - UERJ
+**Philipy Macêdo** Systems and Computer Engineering - UERJ
