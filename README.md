@@ -55,5 +55,7 @@ A preview of the new layout, designed on Figma:
 **And much more!!! 🚀**
 
 ## 👨‍💻 Autor
+
 **Bruno Reis** Systems and Computer Engineering - UERJ
+
 **Philipy Macêdo** Systems and Computer Engineering - UERJ
